@@ -1,23 +1,10 @@
 import argparse
 import os
 import sys
-from http.client import HTTPException
 
-import celery
-import requests
-from gevent.pywsgi import WSGIServer
-
-from flask import Flask, request, send_from_directory, send_file, jsonify, logging, Response
-from typing import List
-import nlp2
-import phraseg
 from flask_cors import CORS
-from time import strftime
-import logging
-from logging.handlers import RotatingFileHandler
-from celery import Celery
-from functools import wraps
-import asyncio
+from gevent.pywsgi import WSGIServer
+from flask import Flask, send_from_directory, send_file, Response
 
 
 class ServerError(Exception):
@@ -36,20 +23,9 @@ class ServerError(Exception):
         return error_dict
 
 
-def async_action(f):
-    @wraps(f)
-    def wrapped(*args, **kwargs):
-        return asyncio.run(f(*args, **kwargs))
-
-    return wrapped
-
-
 def make_app(static_dir: str = None) -> Flask:
     static_dir = os.path.abspath(static_dir)
     app = Flask(__name__, static_folder=static_dir)  # pylint: disable=invalid-name
-
-    # API_ENDPOINT = os.environ["API"]
-    # API_ENDPOINT = 'http://localhost:8022/api/'
 
     @app.route('/')
     def index() -> Response:  # pylint: disable=unused-variable
@@ -62,14 +38,6 @@ def make_app(static_dir: str = None) -> Flask:
             return send_from_directory(static_dir, path)
         else:
             return send_file(os.path.join(static_dir, 'index.html'))
-
-    def auth(token):
-        if token and token == "2a669d6c9eefaed1df2eabcd85f2b31eadc66663f47aae1e58eafc94b96e0801":
-            return True
-        else:
-            return False
-
-
 
     return app
 

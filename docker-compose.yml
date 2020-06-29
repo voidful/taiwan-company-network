@@ -1,35 +1,11 @@
 version: '2'
 services:
-  voidful-web-server:
+  company-network-web-server:
     build: './website'
     restart: always
-    container_name: voidful-web-server
-    environment:
-      - API=http://voidful-api:8021/api/
-    volumes:
-      - ./log/:/usr/src/app/data/
+    container_name: company-network-web-server
     expose:
-      - 80
+      - 8070
     ports:
-      - "80:80"
-    networks:
-      - apiproxy
-
-  voidful-api:
-    build: './api'
-    restart: always
-    environment:
-      - PORT=8021
-    container_name: voidful-api
-    expose:
-      - 8021
-    ports:
-      - "8021:8021"
-    networks:
-      - apiproxy
-
-
-networks:
-  apiproxy:
-    driver: bridge
+      - "8070:8070"
 
