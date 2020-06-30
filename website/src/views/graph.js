@@ -133,10 +133,14 @@ const invest = function (that) {
         links: []
     };
     addNode(that.state.comp, graph_data, 'in')
-    that.setState({
-        graph_data: graph_data,
-        comp: that.state.comp,
-    })
+    if (graph_data['nodes'].length > 0) {
+        that.setState({
+            graph_data: graph_data,
+            comp: that.state.comp,
+        })
+    } else {
+        window.alert(`no data`);
+    }
 };
 const outvest = function (that) {
     let graph_data = {
@@ -144,10 +148,14 @@ const outvest = function (that) {
         links: []
     };
     addNode(that.state.comp, graph_data, 'out')
-    that.setState({
-        graph_data: graph_data,
-        comp: that.state.comp,
-    })
+    if (graph_data['nodes'].length > 0) {
+        that.setState({
+            graph_data: graph_data,
+            comp: that.state.comp,
+        })
+    } else {
+        window.alert(`no data`);
+    }
 };
 const investout = function (that) {
     let graph_data = {
@@ -157,10 +165,14 @@ const investout = function (that) {
     comp_graph[that.state.comp]['in'].forEach(element => {
         addNode(element, graph_data, 'out')
     })
-    that.setState({
-        graph_data: graph_data,
-        comp: that.state.comp,
-    })
+    if (graph_data['nodes'].length > 0) {
+        that.setState({
+            graph_data: graph_data,
+            comp: that.state.comp,
+        })
+    } else {
+        window.alert(`no data`);
+    }
 };
 const investin = function (that) {
     let graph_data = {
@@ -170,10 +182,14 @@ const investin = function (that) {
     comp_graph[that.state.comp]['in'].forEach(element => {
         addNode(element, graph_data, 'in')
     })
-    that.setState({
-        graph_data: graph_data,
-        comp: that.state.comp,
-    })
+    if (graph_data['nodes'].length > 0) {
+        that.setState({
+            graph_data: graph_data,
+            comp: that.state.comp,
+        })
+    } else {
+        window.alert(`no data`);
+    }
 };
 
 const outvestin = function (that) {
@@ -184,10 +200,14 @@ const outvestin = function (that) {
     comp_graph[that.state.comp]['out'].forEach(element => {
         addNode(element, graph_data, 'in')
     })
-    that.setState({
-        graph_data: graph_data,
-        comp: that.state.comp,
-    })
+    if (graph_data['nodes'].length > 0) {
+        that.setState({
+            graph_data: graph_data,
+            comp: that.state.comp,
+        })
+    } else {
+        window.alert(`no data`);
+    }
 };
 const outvestout = function (that) {
     let graph_data = {
@@ -197,11 +217,16 @@ const outvestout = function (that) {
     comp_graph[that.state.comp]['out'].forEach(element => {
         addNode(element, graph_data, 'out')
     })
-    that.setState({
-        graph_data: graph_data,
-        comp: that.state.comp,
-    })
+    if (graph_data['nodes'].length > 0) {
+        that.setState({
+            graph_data: graph_data,
+            comp: that.state.comp,
+        })
+    } else {
+        window.alert(`no data`);
+    }
 };
+
 class CGraph extends React.Component {
 
     constructor(props) {
