@@ -42,7 +42,7 @@ class Index extends React.Component {
     }
 
     handleOnClick = (comp) => {
-        this.props.history.push('/admin/graph', {
+        this.props.history.push('/graph', {
             company: comp
         })
 
