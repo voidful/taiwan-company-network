@@ -1,29 +1,28 @@
 {
   "files": {
     "main.css": "/taiwan-company-network/static/css/main.1c3d4229.chunk.css",
-    "main.js": "/taiwan-company-network/static/js/main.22014616.chunk.js",
-    "main.js.map": "/taiwan-company-network/static/js/main.22014616.chunk.js.map",
+    "main.js": "/taiwan-company-network/static/js/main.49442171.chunk.js",
+    "main.js.map": "/taiwan-company-network/static/js/main.49442171.chunk.js.map",
     "runtime-main.js": "/taiwan-company-network/static/js/runtime-main.cf3e3ee1.js",
     "runtime-main.js.map": "/taiwan-company-network/static/js/runtime-main.cf3e3ee1.js.map",
     "static/css/2.e2109558.chunk.css": "/taiwan-company-network/static/css/2.e2109558.chunk.css",
-    "static/js/2.a8dfba59.chunk.js": "/taiwan-company-network/static/js/2.a8dfba59.chunk.js",
-    "static/js/2.a8dfba59.chunk.js.map": "/taiwan-company-network/static/js/2.a8dfba59.chunk.js.map",
+    "static/js/2.2a161d58.chunk.js": "/taiwan-company-network/static/js/2.2a161d58.chunk.js",
+    "static/js/2.2a161d58.chunk.js.map": "/taiwan-company-network/static/js/2.2a161d58.chunk.js.map",
     "index.html": "/taiwan-company-network/index.html",
-    "precache-manifest.a83016a92bf8feab2394416594cf76cc.js": "/taiwan-company-network/precache-manifest.a83016a92bf8feab2394416594cf76cc.js",
+    "precache-manifest.3294897f433647e25d505d4a92dd53a4.js": "/taiwan-company-network/precache-manifest.3294897f433647e25d505d4a92dd53a4.js",
     "service-worker.js": "/taiwan-company-network/service-worker.js",
     "static/css/2.e2109558.chunk.css.map": "/taiwan-company-network/static/css/2.e2109558.chunk.css.map",
     "static/css/main.1c3d4229.chunk.css.map": "/taiwan-company-network/static/css/main.1c3d4229.chunk.css.map",
-    "static/js/2.a8dfba59.chunk.js.LICENSE.txt": "/taiwan-company-network/static/js/2.a8dfba59.chunk.js.LICENSE.txt",
-    "static/js/main.22014616.chunk.js.LICENSE.txt": "/taiwan-company-network/static/js/main.22014616.chunk.js.LICENSE.txt",
-    "static/media/argon-react.png": "/taiwan-company-network/static/media/argon-react.f38ddea9.png",
+    "static/js/2.2a161d58.chunk.js.LICENSE.txt": "/taiwan-company-network/static/js/2.2a161d58.chunk.js.LICENSE.txt",
+    "static/js/main.49442171.chunk.js.LICENSE.txt": "/taiwan-company-network/static/js/main.49442171.chunk.js.LICENSE.txt",
     "static/media/all.min.css": "/taiwan-company-network/static/media/fa-solid-900.cdfec5cf.woff",
     "static/media/nucleo.css": "/taiwan-company-network/static/media/nucleo-icons.f82ec6ba.ttf"
   },
   "entrypoints": [
     "static/js/runtime-main.cf3e3ee1.js",
     "static/css/2.e2109558.chunk.css",
-    "static/js/2.a8dfba59.chunk.js",
+    "static/js/2.2a161d58.chunk.js",
     "static/css/main.1c3d4229.chunk.css",
-    "static/js/main.22014616.chunk.js"
+    "static/js/main.49442171.chunk.js"
   ]
 }
