@@ -17,7 +17,7 @@
 */
 import React from "react";
 import ReactDOM from "react-dom";
-import {HashRouter, Route, Switch, Redirect, BrowserRouter} from "react-router-dom";
+import {Route, Switch, Redirect, BrowserRouter} from "react-router-dom";
 
 import "assets/plugins/nucleo/css/nucleo.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
