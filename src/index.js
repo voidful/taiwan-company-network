@@ -28,6 +28,7 @@ ReactDOM.render(
     <BrowserRouter basename={process.env.PUBLIC_URL}>
         <Switch>
             <Route path="/" render={props => <AdminLayout {...props} />}/>
+            <Redirect from="*" to="/" />
         </Switch>
     </BrowserRouter>,
     document.getElementById("root")
