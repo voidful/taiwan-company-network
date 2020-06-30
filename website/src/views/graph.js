@@ -162,6 +162,20 @@ const investout = function (that) {
         comp: that.state.comp,
     })
 };
+const investin = function (that) {
+    let graph_data = {
+        nodes: [],
+        links: []
+    };
+    comp_graph[that.state.comp]['in'].forEach(element => {
+        addNode(element, graph_data, 'in')
+    })
+    that.setState({
+        graph_data: graph_data,
+        comp: that.state.comp,
+    })
+};
+
 const outvestin = function (that) {
     let graph_data = {
         nodes: [],
@@ -175,7 +189,19 @@ const outvestin = function (that) {
         comp: that.state.comp,
     })
 };
-
+const outvestout = function (that) {
+    let graph_data = {
+        nodes: [],
+        links: []
+    };
+    comp_graph[that.state.comp]['out'].forEach(element => {
+        addNode(element, graph_data, 'out')
+    })
+    that.setState({
+        graph_data: graph_data,
+        comp: that.state.comp,
+    })
+};
 class CGraph extends React.Component {
 
     constructor(props) {
@@ -233,8 +259,16 @@ class CGraph extends React.Component {
                                     注資方的投資
                                 </Button>
                                 <Button color="default" outline type="button"
+                                        onClick={() => investin(this)}>
+                                    注資方的注資
+                                </Button>
+                                <Button color="default" outline type="button"
                                         onClick={() => outvestin(this)}>
                                     投資公司的注資
+                                </Button>
+                                <Button color="default" outline type="button"
+                                        onClick={() => outvestout(this)}>
+                                    投資公司的投資
                                 </Button>
                             </Col>
                         </div>

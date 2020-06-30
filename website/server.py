@@ -34,7 +34,7 @@ def make_app(static_dir: str = None) -> Flask:
 
     @app.route('/<path:path>')
     def static_proxy(path: str) -> Response:
-        if static_dir is not None:
+        if static_dir is not None and os.path.exists(os.path.join(static_dir, path)):
             return send_from_directory(static_dir, path)
         else:
             return send_file(os.path.join(static_dir, 'index.html'))
