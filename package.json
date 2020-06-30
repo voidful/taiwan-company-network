@@ -22,7 +22,7 @@
   "bugs": {
     "url": "https://github.com/creativetimofficial/argon-dashboard-react/issues"
   },
-  "homepage": "https://voidful.github.io/taiwan-company-network/build/",
+  "homepage": "https://voidful.github.io/taiwan-company-network/",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
