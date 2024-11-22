@@ -1,37 +1,41 @@
 /*!
-
 =========================================================
 * Argon Dashboard React - v1.1.0
 =========================================================
-
 * Product Page: https://www.creative-tim.com/product/argon-dashboard-react
 * Copyright 2019 Creative Tim (https://www.creative-tim.com)
 * Licensed under MIT (https://github.com/creativetimofficial/argon-dashboard-react/blob/master/LICENSE.md)
-
 * Coded by Creative Tim
-
 =========================================================
-
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
-
 */
+
 const Chart = require("chart.js");
-//
-// Chart extension for making the bars rounded
-// Code from: https://codepen.io/jedtrow/full/ygRYgo
-//
 
 Chart.elements.Rectangle.prototype.draw = function() {
-  var ctx = this._chart.ctx;
-  var vm = this._view;
-  var left, right, top, bottom, signX, signY, borderSkipped, radius;
-  var borderWidth = vm.borderWidth;
-  // Set Radius Here
-  // If radius is large enough to cause drawing errors a max radius is imposed
-  var cornerRadius = 6;
+  const ctx = this._chart.ctx;
+  const vm = this._view;
+  const radiusObj = calculateRadius(vm);
+
+  ctx.beginPath();
+  ctx.fillStyle = vm.backgroundColor;
+  ctx.strokeStyle = vm.borderColor;
+  ctx.lineWidth = radiusObj.borderWidth;
+
+  drawRoundedRectangle(ctx, radiusObj);
+
+  ctx.fill();
+  if (radiusObj.borderWidth) {
+    ctx.stroke();
+  }
+};
+
+function calculateRadius(vm) {
+  let left, right, top, bottom, signX, signY, borderSkipped;
+  const borderWidth = vm.borderWidth;
+  const cornerRadius = 6;
 
   if (!vm.horizontal) {
-    // bar
     left = vm.x - vm.width / 2;
     right = vm.x + vm.width / 2;
     top = vm.y;
@@ -40,7 +44,6 @@ Chart.elements.Rectangle.prototype.draw = function() {
     signY = bottom > top ? 1 : -1;
     borderSkipped = vm.borderSkipped || "bottom";
   } else {
-    // horizontal bar
     left = vm.base;
     right = vm.x;
     top = vm.y - vm.height / 2;
@@ -50,74 +53,62 @@ Chart.elements.Rectangle.prototype.draw = function() {
     borderSkipped = vm.borderSkipped || "left";
   }
 
-  // Canvas doesn't allow us to stroke inside the width so we can
-  // adjust the sizes to fit if we're setting a stroke on the line
+  return {
+    left,
+    right,
+    top,
+    bottom,
+    signX,
+    signY,
+    borderSkipped,
+    borderWidth
+  };
+}
+
+function drawRoundedRectangle(ctx, { left, right, top, bottom, borderWidth, borderSkipped, signX, signY }) {
+  let radius = 6;
+
   if (borderWidth) {
-    // borderWidth shold be less than bar width and bar height.
-    var barSize = Math.min(Math.abs(left - right), Math.abs(top - bottom));
+    const barSize = Math.min(Math.abs(left - right), Math.abs(top - bottom));
     borderWidth = borderWidth > barSize ? barSize : borderWidth;
-    var halfStroke = borderWidth / 2;
-    // Adjust borderWidth when bar top position is near vm.base(zero).
-    var borderLeft = left + (borderSkipped !== "left" ? halfStroke * signX : 0);
-    var borderRight =
-      right + (borderSkipped !== "right" ? -halfStroke * signX : 0);
-    var borderTop = top + (borderSkipped !== "top" ? halfStroke * signY : 0);
-    var borderBottom =
-      bottom + (borderSkipped !== "bottom" ? -halfStroke * signY : 0);
-    // not become a vertical line?
+    const halfStroke = borderWidth / 2;
+    const borderLeft = left + (borderSkipped !== "left" ? halfStroke * signX : 0);
+    const borderRight = right + (borderSkipped !== "right" ? -halfStroke * signX : 0);
+    const borderTop = top + (borderSkipped !== "top" ? halfStroke * signY : 0);
+    const borderBottom = bottom + (borderSkipped !== "bottom" ? -halfStroke * signY : 0);
+
     if (borderLeft !== borderRight) {
       top = borderTop;
       bottom = borderBottom;
     }
-    // not become a horizontal line?
     if (borderTop !== borderBottom) {
       left = borderLeft;
       right = borderRight;
     }
   }
 
-  ctx.beginPath();
-  ctx.fillStyle = vm.backgroundColor;
-  ctx.strokeStyle = vm.borderColor;
-  ctx.lineWidth = borderWidth;
-
-  // Corner points, from bottom-left to bottom-right clockwise
-  // | 1 2 |
-  // | 0 3 |
-  var corners = [[left, bottom], [left, top], [right, top], [right, bottom]];
-
-  // Find first (starting) corner with fallback to 'bottom'
-  var borders = ["bottom", "left", "top", "right"];
-  var startCorner = borders.indexOf(borderSkipped, 0);
-  if (startCorner === -1) {
-    startCorner = 0;
-  }
+  const corners = [[left, bottom], [left, top], [right, top], [right, bottom]];
+  const borders = ["bottom", "left", "top", "right"];
+  const startCorner = borders.indexOf(borderSkipped, 0);
 
   function cornerAt(index) {
     return corners[(startCorner + index) % 4];
   }
 
-  // Draw rectangle from 'startCorner'
-  var corner = cornerAt(0);
+  let corner = cornerAt(0);
   ctx.moveTo(corner[0], corner[1]);
 
-  for (var i = 1; i < 4; i++) {
+  for (let i = 1; i < 4; i++) {
     corner = cornerAt(i);
     let nextCornerId = i + 1;
     if (nextCornerId === 4) {
       nextCornerId = 0;
     }
+    const width = corners[2][0] - corners[1][0];
+    const height = corners[0][1] - corners[1][1];
+    const x = corners[1][0];
+    const y = corners[1][1];
 
-    // let nextCorner = cornerAt(nextCornerId);
-
-    let width = corners[2][0] - corners[1][0];
-    let height = corners[0][1] - corners[1][1];
-    let x = corners[1][0];
-    let y = corners[1][1];
-    // eslint-disable-next-line
-    var radius: any = cornerRadius;
-
-    // Fix radius being too large
     if (radius > height / 2) {
       radius = height / 2;
     }
@@ -135,20 +126,12 @@ Chart.elements.Rectangle.prototype.draw = function() {
     ctx.lineTo(x, y + radius);
     ctx.quadraticCurveTo(x, y, x + radius, y);
   }
+}
 
-  ctx.fill();
-  if (borderWidth) {
-    ctx.stroke();
-  }
-};
+const mode = "light";
+const fonts = { base: "Open Sans" };
 
-var mode = "light"; //(themeMode) ? themeMode : 'light';
-var fonts = {
-  base: "Open Sans"
-};
-
-// Colors
-var colors = {
+const colors = {
   gray: {
     100: "#f6f9fc",
     200: "#e9ecef",
@@ -174,12 +157,8 @@ var colors = {
   transparent: "transparent"
 };
 
-// Methods
-
-// Chart.js global options
 function chartOptions() {
-  // Options
-  var options = {
+  const options = {
     defaults: {
       global: {
         responsive: true,
@@ -188,9 +167,7 @@ function chartOptions() {
         defaultFontColor: mode === "dark" ? colors.gray[700] : colors.gray[600],
         defaultFontFamily: fonts.base,
         defaultFontSize: 13,
-        layout: {
-          padding: 0
-        },
+        layout: { padding: 0 },
         legend: {
           display: false,
           position: "bottom",
@@ -228,29 +205,22 @@ function chartOptions() {
       },
       doughnut: {
         cutoutPercentage: 83,
-        legendCallback: function(chart) {
-          var data = chart.data;
-          var content = "";
-
-          data.labels.forEach(function(label, index) {
-            var bgColor = data.datasets[0].backgroundColor[index];
-
-            content += '<span class="chart-legend-item">';
-            content +=
-              '<i class="chart-legend-indicator" style="background-color: ' +
-              bgColor +
-              '"></i>';
-            content += label;
-            content += "</span>";
-          });
-
-          return content;
+        legendCallback(chart) {
+          const data = chart.data;
+          return data.labels.map((label, index) => {
+            const bgColor = data.datasets[0].backgroundColor[index];
+            return `
+              <span class="chart-legend-item">
+                <i class="chart-legend-indicator" style="background-color: ${bgColor}"></i>
+                ${label}
+              </span>
+            `;
+          }).join('');
         }
       }
     }
   };
 
-  // yAxes
   Chart.scaleService.updateScaleDefaults("linear", {
     gridLines: {
       borderDash: [2],
@@ -267,142 +237,93 @@ function chartOptions() {
     ticks: {
       beginAtZero: true,
       padding: 10,
-      callback: function(value) {
-        if (!(value % 10)) {
-          return value;
-        }
+      callback(value) {
+        return !(value % 10) ? value : null;
       }
     }
   });
 
-  // xAxes
   Chart.scaleService.updateScaleDefaults("category", {
     gridLines: {
       drawBorder: false,
       drawOnChartArea: false,
       drawTicks: false
     },
-    ticks: {
-      padding: 20
-    }
+    ticks: { padding: 20 }
   });
 
   return options;
 }
 
-// Parse global options
 function parseOptions(parent, options) {
-  for (var item in options) {
+  Object.keys(options).forEach(item => {
     if (typeof options[item] !== "object") {
       parent[item] = options[item];
     } else {
       parseOptions(parent[item], options[item]);
     }
-  }
+  });
 }
 
-// Example 1 of Chart inside src/views/Index.js (Sales value - Card)
-let chartExample1 = {
+const chartExample1 = {
   options: {
     scales: {
-      yAxes: [
-        {
-          gridLines: {
-            color: colors.gray[900],
-            zeroLineColor: colors.gray[900]
-          },
-          ticks: {
-            callback: function(value) {
-              if (!(value % 10)) {
-                return "$" + value + "k";
-              }
-            }
+      yAxes: [{
+        gridLines: {
+          color: colors.gray[900],
+          zeroLineColor: colors.gray[900]
+        },
+        ticks: {
+          callback(value) {
+            return !(value % 10) ? `$${value}k` : null;
           }
         }
-      ]
+      }]
     },
     tooltips: {
       callbacks: {
-        label: function(item, data) {
-          var label = data.datasets[item.datasetIndex].label || "";
-          var yLabel = item.yLabel;
-          var content = "";
-
-          if (data.datasets.length > 1) {
-            content += label;
-          }
-
-          content += "$" + yLabel + "k";
-          return content;
+        label(item, data) {
+          const label = data.datasets[item.datasetIndex].label || "";
+          const yLabel = item.yLabel;
+          return `${label ? label + ' ' : ''}$${yLabel}k`;
         }
       }
     }
   },
-  data1: canvas => {
-    return {
-      labels: ["May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-      datasets: [
-        {
-          label: "Performance",
-          data: [0, 20, 10, 30, 15, 40, 20, 60, 60]
-        }
-      ]
-    };
-  },
-  data2: canvas => {
-    return {
-      labels: ["May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-      datasets: [
-        {
-          label: "Performance",
-          data: [0, 20, 5, 25, 10, 30, 15, 40, 40]
-        }
-      ]
-    };
-  }
+  data1: canvas => ({
+    labels: ["May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    datasets: [{ label: "Performance", data: [0, 20, 10, 30, 15, 40, 20, 60, 60] }]
+  }),
+  data2: canvas => ({
+    labels: ["May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    datasets: [{ label: "Performance", data: [0, 20, 5, 25, 10, 30, 15, 40, 40] }]
+  })
 };
 
-// Example 2 of Chart inside src/views/Index.js (Total orders - Card)
-let chartExample2 = {
+const chartExample2 = {
   options: {
     scales: {
-      yAxes: [
-        {
-          ticks: {
-            callback: function(value) {
-              if (!(value % 10)) {
-                //return '$' + value + 'k'
-                return value;
-              }
-            }
+      yAxes: [{
+        ticks: {
+          callback(value) {
+            return !(value % 10) ? value : null;
           }
         }
-      ]
+      }]
     },
     tooltips: {
       callbacks: {
-        label: function(item, data) {
-          var label = data.datasets[item.datasetIndex].label || "";
-          var yLabel = item.yLabel;
-          var content = "";
-          if (data.datasets.length > 1) {
-            content += label;
-          }
-          content += yLabel;
-          return content;
+        label(item, data) {
+          const label = data.datasets[item.datasetIndex].label || "";
+          const yLabel = item.yLabel;
+          return `${label ? label + ' ' : ''}${yLabel}`;
         }
       }
     }
   },
   data: {
     labels: ["Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-    datasets: [
-      {
-        label: "Sales",
-        data: [25, 20, 30, 22, 17, 29],
-        maxBarThickness: 10
-      }
-    ]
+    datasets: [{ label: "Sales", data: [25, 20, 30, 22, 17, 29], maxBarThickness: 10 }]
   }
 };
 
