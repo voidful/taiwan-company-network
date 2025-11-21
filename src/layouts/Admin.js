@@ -16,9 +16,9 @@
 
 */
 import React from "react";
-import {Route, Switch, Redirect} from "react-router-dom";
+import { Routes, Route, Navigate, useLocation } from "react-router-dom";
 // reactstrap components
-import {Container} from "reactstrap";
+import { Container } from "reactstrap";
 // core components
 import AdminNavbar from "components/Navbars/AdminNavbar.js";
 import AdminFooter from "components/Footers/AdminFooter.js";
@@ -26,11 +26,15 @@ import Sidebar from "components/Sidebar/Sidebar.js";
 
 import routes from "routes.js";
 
-class Admin extends React.Component {
+class AdminClass extends React.Component {
+    mainContentRef = React.createRef();
+
     componentDidUpdate(e) {
         document.documentElement.scrollTop = 0;
         document.scrollingElement.scrollTop = 0;
-        this.refs.mainContent.scrollTop = 0;
+        if (this.mainContentRef.current) {
+            this.mainContentRef.current.scrollTop = 0;
+        }
     }
 
     getRoutes = routes => {
@@ -38,19 +42,16 @@ class Admin extends React.Component {
             return (
                 <Route
                     path={prop.path}
-                    component={prop.component}
+                    element={<prop.component />}
                     key={key}
                 />
             );
         });
     };
+
     getBrandText = path => {
         for (let i = 0; i < routes.length; i++) {
-            if (
-                this.props.location.pathname.indexOf(
-                    routes[i].layout + routes[i].path
-                ) !== -1
-            ) {
+            if (path.indexOf(routes[i].path) !== -1) {
                 return routes[i].name;
             }
         }
@@ -64,22 +65,28 @@ class Admin extends React.Component {
                     {...this.props}
                     routes={routes}
                 />
-                <div className="main-content" ref="mainContent">
+                <div className="main-content" ref={this.mainContentRef}>
                     <AdminNavbar
                         {...this.props}
                         brandText={this.getBrandText(this.props.location.pathname)}
                     />
-                    <Switch>
+                    <Routes>
                         {this.getRoutes(routes)}
-                        <Redirect from="*" to="/index"/>
-                    </Switch>
+                        <Route path="*" element={<Navigate to="/index" replace />} />
+                    </Routes>
                     <Container fluid>
-                        <AdminFooter/>
+                        <AdminFooter />
                     </Container>
                 </div>
             </>
         );
     }
+}
+
+// Wrapper to use hooks
+function Admin(props) {
+    const location = useLocation();
+    return <AdminClass {...props} location={location} />;
 }
 
 export default Admin;

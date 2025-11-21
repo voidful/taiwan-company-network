@@ -17,16 +17,15 @@
 */
 /*eslint-disable*/
 import React from "react";
-import {NavLink as NavLinkRRD, Link} from "react-router-dom";
+import { NavLink as NavLinkRRD, Link, useLocation } from "react-router-dom";
 // nodejs library to set properties for components
-import {PropTypes} from "prop-types";
+import { PropTypes } from "prop-types";
 
 // reactstrap components
 import {
     Collapse,
     Form,
     Input,
-    InputGroupAddon,
     InputGroupText,
     InputGroup,
     Navbar,
@@ -40,7 +39,7 @@ import {
 
 var ps;
 
-class Sidebar extends React.Component {
+class SidebarClass extends React.Component {
     state = {
         collapseOpen: false
     };
@@ -70,25 +69,25 @@ class Sidebar extends React.Component {
     // creates the links that appear in the left menu / Sidebar
     createLinks = routes => {
         return routes.map((prop, key) => {
-            if(prop.name != 'Graph')
-            return (
-                <NavItem key={key}>
-                    <NavLink
-                        to={prop.layout + prop.path}
-                        tag={NavLinkRRD}
-                        onClick={this.closeCollapse}
-                        activeClassName="active"
-                    >
-                        <i className={prop.icon}/>
-                        {prop.name}
-                    </NavLink>
-                </NavItem>
-            );
+            if (prop.name != 'Graph')
+                return (
+                    <NavItem key={key}>
+                        <NavLink
+                            to={prop.path}
+                            tag={NavLinkRRD}
+                            onClick={this.closeCollapse}
+                            className={({ isActive }) => isActive ? "active" : ""}
+                        >
+                            <i className={prop.icon} />
+                            {prop.name}
+                        </NavLink>
+                    </NavItem>
+                );
         });
     };
 
     render() {
-        const {bgColor, routes, logo} = this.props;
+        const { bgColor, routes, logo } = this.props;
         let navbarBrandProps;
         if (logo && logo.innerLink) {
             navbarBrandProps = {
@@ -114,7 +113,7 @@ class Sidebar extends React.Component {
                         type="button"
                         onClick={this.toggleCollapse}
                     >
-                        <span className="navbar-toggler-icon"/>
+                        <span className="navbar-toggler-icon" />
                     </button>
                     {/* Collapse */}
                     <Collapse navbar isOpen={this.state.collapseOpen}>
@@ -125,11 +124,11 @@ class Sidebar extends React.Component {
                                     <Col className="collapse-brand" xs="6">
                                         {logo.innerLink ? (
                                             <Link to={logo.innerLink}>
-                                                <img alt={logo.imgAlt} src={logo.imgSrc}/>
+                                                <img alt={logo.imgAlt} src={logo.imgSrc} />
                                             </Link>
                                         ) : (
                                             <a href={logo.outterLink}>
-                                                <img alt={logo.imgAlt} src={logo.imgSrc}/>
+                                                <img alt={logo.imgAlt} src={logo.imgSrc} />
                                             </a>
                                         )}
                                     </Col>
@@ -140,8 +139,8 @@ class Sidebar extends React.Component {
                                         type="button"
                                         onClick={this.toggleCollapse}
                                     >
-                                        <span/>
-                                        <span/>
+                                        <span />
+                                        <span />
                                     </button>
                                 </Col>
                             </Row>
@@ -155,11 +154,9 @@ class Sidebar extends React.Component {
                                     placeholder="Search"
                                     type="search"
                                 />
-                                <InputGroupAddon addonType="prepend">
-                                    <InputGroupText>
-                                        <span className="fa fa-search"/>
-                                    </InputGroupText>
-                                </InputGroupAddon>
+                                <InputGroupText>
+                                    <span className="fa fa-search" />
+                                </InputGroupText>
                             </InputGroup>
                         </Form>
                         {/* Navigation */}
@@ -191,5 +188,11 @@ Sidebar.propTypes = {
         imgAlt: PropTypes.string.isRequired
     })
 };
+
+// Wrapper to use hooks
+function Sidebar(props) {
+    const location = useLocation();
+    return <SidebarClass {...props} location={location} />;
+}
 
 export default Sidebar;

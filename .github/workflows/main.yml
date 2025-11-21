@@ -29,26 +29,37 @@ jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Build 🔧
+      - name: Checkout 🛎️
         uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '18.x'
-      - run: |
-          npm install
-          npm run build
-      - name: Set up Python 3.8
+        
+      - name: Set up Python 3.11 🐍
         uses: actions/setup-python@v5
         with:
-          python-version: 3.8
-      - name: Install dependencies
+          python-version: '3.11'
+          cache: 'pip'
+          
+      - name: Install Python dependencies 📦
         run: |
           python -m pip install --upgrade pip
           pip install nlp2
-      - name: Update data
+          
+      - name: Update company data 📊
         run: |
           python update.py
-      - name: Deploy 🚀
+          
+      - name: Set up Node.js 18 ⚙️
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18.x'
+          cache: 'npm'
+          
+      - name: Install Node dependencies 📦
+        run: npm ci
+        
+      - name: Build React app 🔧
+        run: npm run build
+        
+      - name: Deploy to GitHub Pages 🚀
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.ACCESS_TOKEN }}

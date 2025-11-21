@@ -1,0 +1,86 @@
+/* Custom UI enhancements for Taiwan Company Network */
+
+/* Search bar container */
+.search-container {
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: flex-start;
+}
+
+/* Search input group styling */
+.search-input-group {
+    width: 100%;
+    max-width: 400px;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.search-input-group .input-group-text {
+    background-color: #f8f9fa;
+    border: none;
+}
+
+.search-input-group .form-control {
+    border: none;
+    background-color: #fff;
+}
+
+/* Company card styling */
+.company-card {
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: none;
+    border-radius: 0.75rem;
+    background: linear-gradient(135deg, #e0f7ff 0%, #fff 100%);
+    padding: 1rem;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.company-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.company-name {
+    display: block;
+    font-weight: 600;
+    font-size: 1rem;
+    color: #212529;
+    margin-bottom: 0.5rem;
+}
+
+.company-arrow {
+    font-size: 0.9rem;
+    color: #5e72e4;
+}
+
+/* Load more button container */
+.load-more-container {
+    margin-top: 1.5rem;
+}
+
+.btn-load-more {
+    min-width: 150px;
+    font-weight: 600;
+    border-radius: 0.5rem;
+    transition: background-color 0.2s ease;
+}
+
+.btn-load-more:hover {
+    background-color: #5e72e4;
+    color: #fff;
+}
+
+/* Adjust card header spacing */
+.card-header {
+    padding-bottom: 0.5rem;
+}
+
+/* Ensure responsive layout */
+@media (max-width: 768px) {
+    .company-card {
+        margin-bottom: 1rem;
+    }
+}

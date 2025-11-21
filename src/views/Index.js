@@ -17,7 +17,7 @@
 */
 import React from "react";
 import comp_graph from 'assets/data/graph.json';
-import { withRouter } from "react-router";
+import { useNavigate } from "react-router-dom";
 
 import {
     Card,
@@ -25,43 +25,38 @@ import {
     CardBody,
     Container,
     Row,
-    Col, InputGroupAddon, InputGroupText, Input, InputGroup
+    Col, InputGroupText, Input, InputGroup, Button
 } from "reactstrap";
 // core components
 import Header from "components/Headers/Header.js";
 
-class Index extends React.Component {
-    state = {};
+class IndexClass extends React.Component {
+    state = {
+        search: [],
+        visibleCompanies: 20 // Initial number of companies to show
+    };
 
-    constructor(props) {
-        super(props);
 
-        this.state = {
-            search: []
-        }
-    }
 
     handleOnClick = (comp) => {
-        this.props.history.push('/graph', {
-            company: comp
+        this.props.navigate('/graph', {
+            state: { company: comp }
         })
 
     }
 
     render() {
-        let options;
-        if (this.state.search.length) {
+        const filteredCompanies = Object.keys(comp_graph).filter((comp) => {
+            if (this.state.search.length === 0) {
+                return true;
+            }
             const searchPattern = new RegExp(this.state.search.map(term => `(?=.*${term})`).join(''), 'i');
-            options = Object.keys(comp_graph).filter(option =>
-                option.match(searchPattern)
-            );
-        } else {
-            options = Object.keys(comp_graph);
-        }
+            return comp.match(searchPattern);
+        });
 
         return (
             <>
-                <Header/>
+                <Header />
                 {/* Page content */}
                 <Container className=" mt--7" fluid>
                     {/* Table */}
@@ -69,36 +64,55 @@ class Index extends React.Component {
                         <div className=" col">
                             <Card className=" shadow">
                                 <CardHeader className=" bg-transparent">
-                                    <h3 className=" mb-0">Company list</h3>
-                                    <br/>
-                                    <InputGroup className="input-group-alternative">
-                                        <InputGroupAddon addonType="prepend">
+                                    <h3 className="mb-0">Company list</h3>
+                                    <br />
+                                    <div className="search-container">
+                                        <InputGroup className="search-input-group">
                                             <InputGroupText>
-                                                <i className="fas fa-search"/>
+                                                <i className="fas fa-search" />
                                             </InputGroupText>
-                                        </InputGroupAddon>
-                                        <Input placeholder="Search" type="text"
-                                               onChange={(e) => this.setState({search: e.target.value.split(' ')})}/>
-                                    </InputGroup>
+                                            <Input
+                                                placeholder="Search companies..."
+                                                type="text"
+                                                className="form-control"
+                                                onChange={(e) => {
+                                                    this.setState({
+                                                        search: e.target.value.split(' ').filter(Boolean), // Filter out empty strings
+                                                        visibleCompanies: 20 // Reset visible count on search
+                                                    });
+                                                }}
+                                            />
+                                        </InputGroup>
+                                    </div>
                                 </CardHeader>
                                 <CardBody>
-                                    <Row className=" icon-examples">
-                                        {options.slice(0, 100).map((key, index) => (
-                                            <Col lg="4" md="4" key={index}>
-                                                <CardBody>
-                                                    <button
-                                                        className=" btn-icon-clipboard"
-                                                        type="button"
-                                                        onClick={() => this.handleOnClick(key)}>
-                                                        <div>
-                                                            <i className=" ni ni-building"/>
-                                                            <span>{key}</span>
-                                                        </div>
-                                                    </button>
-                                                </CardBody>
-                                            </Col>
-                                        ))}
+                                    <Row>
+                                        {
+                                            filteredCompanies.slice(0, this.state.visibleCompanies).map((comp) => {
+                                                return (
+                                                    <Col xl="3" md="6" key={comp}>
+                                                        <Card className="company-card" onClick={() => this.handleOnClick(comp)}>
+                                                            <CardBody>
+                                                                <span className="company-name">{comp}</span>
+                                                                <i className="fas fa-arrow-right company-arrow" />
+                                                            </CardBody>
+                                                        </Card>
+                                                    </Col>
+                                                );
+                                            })
+                                        }
                                     </Row>
+                                    {filteredCompanies.length > this.state.visibleCompanies && (
+                                        <div className="load-more-container text-center mt-4">
+                                            <Button
+                                                className="btn-load-more"
+                                                color="primary"
+                                                onClick={() => this.setState(prevState => ({ visibleCompanies: prevState.visibleCompanies + 20 }))}
+                                            >
+                                                Load More
+                                            </Button>
+                                        </div>
+                                    )}
                                 </CardBody>
                             </Card>
                         </div>
@@ -109,4 +123,10 @@ class Index extends React.Component {
     }
 }
 
-export default withRouter(Index);
+// Wrapper component to use hooks with class component
+function Index(props) {
+    const navigate = useNavigate();
+    return <IndexClass {...props} navigate={navigate} />;
+}
+
+export default Index;

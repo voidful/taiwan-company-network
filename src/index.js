@@ -16,20 +16,20 @@
 
 */
 import React from "react";
-import ReactDOM from "react-dom";
-import {Route, Switch, Redirect, BrowserRouter} from "react-router-dom";
+import ReactDOM from "react-dom/client";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import "assets/plugins/nucleo/css/nucleo.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import "assets/scss/argon-dashboard-react.scss";
+import "assets/css/custom.css";
 import AdminLayout from "layouts/Admin.js";
 
-ReactDOM.render(
+const root = ReactDOM.createRoot(document.getElementById("root"));
+root.render(
     <BrowserRouter basename={process.env.PUBLIC_URL}>
-        <Switch>
-            <Route path="/" render={props => <AdminLayout {...props} />}/>
-            <Redirect from="*" to="/" />
-        </Switch>
-    </BrowserRouter>,
-    document.getElementById("root")
+        <Routes>
+            <Route path="/*" element={<AdminLayout />} />
+        </Routes>
+    </BrowserRouter>
 );
