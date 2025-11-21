@@ -16,7 +16,7 @@
 
 */
 import React from "react";
-import { Graph } from 'react-d3-graph';
+import ForceGraph2D from 'react-force-graph-2d';
 import { useLocation } from "react-router-dom";
 
 import comp_graph from 'assets/data/graph.json';
@@ -31,71 +31,9 @@ import {
 import Header from "components/Headers/Header.js";
 
 
-const graphConfig = {
-    "automaticRearrangeAfterDropNode": true,
-    "collapsible": true,
-    "directed": true,
-    "focusAnimationDuration": 0.75,
-    "focusZoom": 1,
-    "height": 600,
-    "highlightDegree": 3,
-    "highlightOpacity": 0.1,
-    "linkHighlightBehavior": true,
-    "maxZoom": 8,
-    "minZoom": 0.1,
-    "nodeHighlightBehavior": true,
-    "panAndZoom": true,
-    "staticGraph": false,
-    "staticGraphWithDragAndDrop": false,
-    "width": 800,
-    "d3": {
-        "alphaTarget": 0.05,
-        "gravity": -100,
-        "linkLength": 200,
-        "linkStrength": 1,
-        "disableLinkForce": false
-    },
-    "node": {
-        "color": "#0072E3",
-        "fontColor": "#460046\t",
-        "fontSize": 12,
-        "fontWeight": "normal",
-        "highlightColor": "SAME",
-        "highlightFontSize": 16,
-        "highlightFontWeight": "normal",
-        "highlightStrokeColor": "SAME",
-        "highlightStrokeWidth": "SAME",
-        "labelProperty": "id",
-        "mouseCursor": "pointer",
-        "opacity": 1,
-        "renderLabel": true,
-        "size": 300,
-        "strokeColor": "none",
-        "strokeWidth": 1.5,
-        "svg": "",
-        "symbolType": "circle"
-    },
-    "link": {
-        "color": "#66B3FF",
-        "fontColor": "black",
-        "fontSize": 8,
-        "fontWeight": "normal",
-        "highlightColor": "SAME",
-        "highlightFontSize": 8,
-        "highlightFontWeight": "normal",
-        "labelProperty": "label",
-        "mouseCursor": "pointer",
-        "opacity": 1,
-        "renderLabel": false,
-        "semanticStrokeWidth": false,
-        "strokeWidth": 2,
-        "markerHeight": 6,
-        "markerWidth": 6
-    }
-};
-
 class CGraphClass extends React.Component {
     graphContainerRef = React.createRef();
+    fgRef = React.createRef();
 
     constructor(props) {
         super(props);
@@ -107,34 +45,10 @@ class CGraphClass extends React.Component {
                 links: []
             },
             comp: comp,
-            graphConfig: this.getGraphConfig(), // 动态配置
-            zoomLevel: 1 // 当前缩放级别
+            containerWidth: 800,
+            containerHeight: 600
         };
     }
-
-    getGraphConfig = () => {
-        // 获取容器尺寸，如果容器还未渲染则使用默认值
-        const width = this.graphContainerRef.current?.offsetWidth || window.innerWidth * 0.9;
-        const height = 600; // 固定高度或使用 window.innerHeight * 0.7
-        const zoom = this.state?.zoomLevel || 1;
-
-        return {
-            ...graphConfig,
-            width: width,
-            height: height,
-            node: {
-                ...graphConfig.node,
-                size: 300 * zoom,
-                fontSize: 12 * zoom,
-                highlightFontSize: 16 * zoom
-            },
-            link: {
-                ...graphConfig.link,
-                fontSize: 8 * zoom,
-                strokeWidth: 2 * zoom
-            }
-        };
-    };
 
     componentDidMount() {
         // 默认显示投资方（注資方）
@@ -154,49 +68,41 @@ class CGraphClass extends React.Component {
     }
 
     handleResize = () => {
-        // 窗口调整时更新图表配置
-        this.setState({ graphConfig: this.getGraphConfig() });
+        // 窗口调整时更新容器尺寸
+        if (this.graphContainerRef.current) {
+            this.setState({
+                containerWidth: this.graphContainerRef.current.offsetWidth,
+                containerHeight: 600
+            });
+        }
     };
 
     // 放大
     handleZoomIn = () => {
-        this.setState(prevState => {
-            const newZoom = Math.min(prevState.zoomLevel * 1.2, 2.5); // 最大2.5倍
-            return { zoomLevel: newZoom };
-        }, () => {
-            // 更新配置
-            this.setState({ graphConfig: this.getGraphConfig() });
-        });
+        if (this.fgRef.current) {
+            this.fgRef.current.zoom(this.fgRef.current.zoom() * 1.2, 400);
+        }
     };
 
     // 缩小
     handleZoomOut = () => {
-        this.setState(prevState => {
-            const newZoom = Math.max(prevState.zoomLevel * 0.8, 0.5); // 最小0.5倍
-            return { zoomLevel: newZoom };
-        }, () => {
-            // 更新配置
-            this.setState({ graphConfig: this.getGraphConfig() });
-        });
+        if (this.fgRef.current) {
+            this.fgRef.current.zoom(this.fgRef.current.zoom() * 0.8, 400);
+        }
     };
 
     // 重置缩放
     handleZoomReset = () => {
-        this.setState({ zoomLevel: 1 }, () => {
-            // 更新配置
-            this.setState({ graphConfig: this.getGraphConfig() });
-        });
+        if (this.fgRef.current) {
+            this.fgRef.current.zoomToFit(400, 50);
+        }
     };
 
-    onClickNode = (nodeId) => {
-        // window.alert(`Clicked node ${JSON.stringify(comp_graph[nodeId], null, "\t")}`);
-        // Maybe navigate to that company?
-        this.setState({ comp: nodeId }, () => {
-            // Reset graph or just focus? For now let's just update state comp
-            // If we want to reload the graph for the new node:
-            let graph_data = { nodes: [], links: [] };
-            this.addNode(nodeId, graph_data, 'in'); // Reset to just this node?
-            this.setState({ graph_data });
+    onClickNode = (node) => {
+        // Navigate to that company
+        this.setState({ comp: node.id }, () => {
+            // Default to showing investors when clicking a new company
+            this.invest();
         });
     };
 
@@ -204,14 +110,14 @@ class CGraphClass extends React.Component {
         if (!comp_graph[comp]) return; // Safety check
 
         if (graph_data['nodes'].findIndex(n => n.id === comp) === -1) {
-            graph_data['nodes'].push({ 'id': comp });
+            graph_data['nodes'].push({ 'id': comp, 'name': comp });
         }
 
         if (inout === 'in') {
             if (comp_graph[comp]['in']) {
                 comp_graph[comp]['in'].forEach(element => {
                     if (graph_data['nodes'].findIndex(n => n.id === element) === -1) {
-                        graph_data['nodes'].push({ 'id': element });
+                        graph_data['nodes'].push({ 'id': element, 'name': element });
                     }
                     if (graph_data['links'].findIndex(l => l.source === element && l.target === comp) === -1) {
                         graph_data['links'].push({ 'source': element, 'target': comp });
@@ -222,7 +128,7 @@ class CGraphClass extends React.Component {
             if (comp_graph[comp]['out']) {
                 comp_graph[comp]['out'].forEach(element => {
                     if (graph_data['nodes'].findIndex(n => n.id === element) === -1) {
-                        graph_data['nodes'].push({ 'id': element });
+                        graph_data['nodes'].push({ 'id': element, 'name': element });
                     }
                     if (graph_data['links'].findIndex(l => l.source === comp && l.target === element) === -1) {
                         graph_data['links'].push({ 'source': comp, 'target': element });
@@ -233,16 +139,6 @@ class CGraphClass extends React.Component {
     };
 
     updateGraph = (type, direction) => {
-        // let graph_data = { ...this.state.graph_data }; // removed unused variable
-        // The original code seemed to reset graph_data for some, but append for others? 
-        // Actually, the original code created a NEW graph_data every time in the functions.
-        // Let's follow that pattern for now to match behavior, or improve it.
-        // The original behavior:
-        // invest/outvest: creates NEW graph_data with just the main comp and its neighbors.
-        // investout/investin/etc: creates NEW graph_data based on neighbors.
-
-        // Let's stick to the original logic but cleaner.
-
         let new_graph_data = { nodes: [], links: [] };
 
         if (type === 'invest') {
@@ -250,7 +146,6 @@ class CGraphClass extends React.Component {
         } else if (type === 'outvest') {
             this.addNode(this.state.comp, new_graph_data, 'out');
         } else if (type === 'investout') {
-            // comp_graph[that.state.comp]['in'].forEach(element => addNode(element, graph_data, 'out'))
             if (comp_graph[this.state.comp] && comp_graph[this.state.comp]['in']) {
                 comp_graph[this.state.comp]['in'].forEach(element => {
                     this.addNode(element, new_graph_data, 'out');
@@ -283,7 +178,7 @@ class CGraphClass extends React.Component {
         }
     };
 
-    // Helper wrappers to match original functionality names if needed, or just use updateGraph directly in render
+    // Helper wrappers to match original functionality names
     invest = () => this.updateGraph('invest');
     outvest = () => this.updateGraph('outvest');
     investout = () => this.updateGraph('investout');
@@ -320,11 +215,57 @@ class CGraphClass extends React.Component {
                                     </div>
                                 </CardHeader>
                                 <div ref={this.graphContainerRef} style={{ height: '600px', width: '100%' }}>
-                                    <Graph
-                                        id="graph-company"
-                                        data={this.state.graph_data}
-                                        config={this.state.graphConfig}
-                                        onClickNode={this.onClickNode}
+                                    <ForceGraph2D
+                                        ref={this.fgRef}
+                                        graphData={this.state.graph_data}
+                                        width={this.state.containerWidth}
+                                        height={this.state.containerHeight}
+                                        nodeId="id"
+                                        nodeLabel="name"
+                                        nodeAutoColorBy="id"
+                                        nodeCanvasObject={(node, ctx, globalScale) => {
+                                            const label = node.name || node.id;
+                                            const fontSize = 12 / globalScale;
+                                            ctx.font = `${fontSize}px Sans-Serif`;
+                                            const textWidth = ctx.measureText(label).width;
+                                            const bckgDimensions = [textWidth, fontSize].map(n => n + fontSize * 0.4);
+
+                                            // Draw node circle
+                                            ctx.fillStyle = node.color || '#0072E3';
+                                            ctx.beginPath();
+                                            ctx.arc(node.x, node.y, 5, 0, 2 * Math.PI, false);
+                                            ctx.fill();
+
+                                            // Draw label background
+                                            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+                                            ctx.fillRect(
+                                                node.x - bckgDimensions[0] / 2,
+                                                node.y + 8,
+                                                bckgDimensions[0],
+                                                bckgDimensions[1]
+                                            );
+
+                                            // Draw label text
+                                            ctx.textAlign = 'center';
+                                            ctx.textBaseline = 'top';
+                                            ctx.fillStyle = '#460046';
+                                            ctx.fillText(label, node.x, node.y + 8);
+                                        }}
+                                        nodePointerAreaPaint={(node, color, ctx) => {
+                                            ctx.fillStyle = color;
+                                            ctx.beginPath();
+                                            ctx.arc(node.x, node.y, 5, 0, 2 * Math.PI, false);
+                                            ctx.fill();
+                                        }}
+                                        linkDirectionalArrowLength={6}
+                                        linkDirectionalArrowRelPos={1}
+                                        linkColor={() => '#66B3FF'}
+                                        linkWidth={2}
+                                        onNodeClick={this.onClickNode}
+                                        cooldownTicks={100}
+                                        onEngineStop={() => this.fgRef.current && this.fgRef.current.zoomToFit(400, 50)}
+                                        d3AlphaDecay={0.02}
+                                        d3VelocityDecay={0.3}
                                     />
                                 </div>
                                 <div className="p-3">
