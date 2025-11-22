@@ -85,6 +85,9 @@ def calculate_legal_persons(json_list: Iterable[Dict[str, Any]]) -> Dict[str, in
     return {k: v for k, v in sorted(names_dict.items(), key=lambda item: item[1], reverse=True)}
 
 
+
+
+
 def normalize_capital(raw_value: str) -> int:
     """Convert capital amount string into an integer value."""
 
@@ -94,7 +97,7 @@ def normalize_capital(raw_value: str) -> int:
 def create_empty_node() -> Dict[str, Any]:
     """Create a default graph node structure."""
 
-    return {"id": "", "資本總額": 0, "代表人姓名": "", "公司所在地": "", "in": [], "out": []}
+    return {"in": [], "out": []}
 
 
 def build_graph(json_list: List[Dict[str, Any]]) -> Dict[str, Dict[str, Any]]:
@@ -110,10 +113,6 @@ def build_graph(json_list: List[Dict[str, Any]]) -> Dict[str, Dict[str, Any]]:
         if company_name not in graph_dict:
             graph_dict[company_name] = create_empty_node()
 
-        graph_dict[company_name]["id"] = company["id"]
-        graph_dict[company_name]["資本總額"] = normalize_capital(company["資本總額"])
-        graph_dict[company_name]["代表人姓名"] = company["代表人姓名"]
-        graph_dict[company_name]["公司所在地"] = company["公司所在地"]
         for investor in company["董監事名單"]:
             if investor["所代表法人"] != "" and investor["所代表法人"][1] in graph_dict:
                 investor_name = investor["所代表法人"][1]
@@ -125,6 +124,19 @@ def build_graph(json_list: List[Dict[str, Any]]) -> Dict[str, Dict[str, Any]]:
     return graph_dict
 
 
+def build_details(json_list: List[Dict[str, Any]]) -> Dict[str, Dict[str, Any]]:
+    """Extract company metadata."""
+    details_dict: Dict[str, Dict[str, Any]] = {}
+    for company in json_list:
+        details_dict[company["公司名稱"]] = {
+            "id": company["id"],
+            "資本總額": normalize_capital(company["資本總額"]),
+            "代表人姓名": company["代表人姓名"],
+            "公司所在地": company["公司所在地"],
+        }
+    return details_dict
+
+
 def save_json(data: Dict[str, Any], file_name: str) -> None:
     """Persist data to a UTF-8 encoded JSON file."""
 
@@ -133,9 +145,13 @@ def save_json(data: Dict[str, Any], file_name: str) -> None:
 
 
 if __name__ == "__main__":
-    save_file_name = "./src/assets/data/graph.json"
+    save_file_name = "./public/data/graph.json"
+    save_details_name = "./public/data/company_details.json"
     data_list = read_source_data(DATA_SOURCE_LIST)
     print("total count company:", len(data_list))
 
     graph_dict = build_graph(data_list)
     save_json(graph_dict, save_file_name)
+
+    details_dict = build_details(data_list)
+    save_json(details_dict, save_details_name)
