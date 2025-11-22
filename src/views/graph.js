@@ -237,333 +237,369 @@ class CGraphClass extends React.Component {
                             <h3 style={{ marginTop: '30px' }} className="text-muted">Loading data</h3>
                         </div>
                     ) : (
-                        <Row className="fade-in">
-                            <Col lg="12">
-
-                                <Card style={{
-                                    borderRadius: '12px',
-                                    border: 'none',
-                                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.12)'
-                                }}>
-                                    <CardHeader style={{
-                                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                                        borderRadius: '12px 12px 0 0',
+                        <>
+                            {/* Breadcrumb Navigation */}
+                            <div className="mb-3 fade-in" style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '10px'
+                            }}>
+                                <Button
+                                    color="light"
+                                    size="sm"
+                                    onClick={() => this.props.navigate('/admin/index')}
+                                    style={{
+                                        borderRadius: '8px',
                                         display: 'flex',
-                                        justifyContent: 'space-between',
                                         alignItems: 'center',
-                                        border: 'none'
+                                        gap: '8px',
+                                        boxShadow: '0 2px 8px rgba(0,0,0,0.1)'
+                                    }}
+                                >
+                                    <i className="fas fa-arrow-left" />
+                                    Back to List
+                                </Button>
+                                <div style={{
+                                    fontSize: '0.9rem',
+                                    color: '#8898aa',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '8px'
+                                }}>
+                                    <i className="fas fa-home" />
+                                    <span>/</span>
+                                    <span>Companies</span>
+                                    <span>/</span>
+                                    <span style={{ color: '#5e72e4', fontWeight: '600' }}>{this.state.comp}</span>
+                                </div>
+                            </div>
+                            <Row className="fade-in">
+                                <Col lg="12">
+
+                                    <Card style={{
+                                        borderRadius: '12px',
+                                        border: 'none',
+                                        boxShadow: '0 4px 20px rgba(0, 0, 0, 0.12)'
                                     }}>
-                                        <h3 className="mb-0" style={{ color: 'white', fontWeight: '700' }}>
-                                            <i className="fas fa-project-diagram mr-2" />
-                                            {this.state.comp}
-                                        </h3>
-                                        <div className="d-flex align-items-center">
-                                            <small style={{ color: 'rgba(255,255,255,0.9)', marginRight: '15px' }}>
-                                                Click nodes to explore
-                                            </small>
-                                            <ButtonGroup size="sm">
-                                                <Button
-                                                    style={{
-                                                        backgroundColor: 'rgba(255,255,255,0.2)',
-                                                        border: '1px solid rgba(255,255,255,0.4)',
-                                                        color: 'white'
-                                                    }}
-                                                    onClick={this.handleZoomOut}
-                                                    title="缩小">
-                                                    <i className="fas fa-search-minus" />
-                                                </Button>
-                                                <Button
-                                                    style={{
-                                                        backgroundColor: 'rgba(255,255,255,0.2)',
-                                                        border: '1px solid rgba(255,255,255,0.4)',
-                                                        color: 'white'
-                                                    }}
-                                                    onClick={this.handleZoomReset}
-                                                    title="重置">
-                                                    <i className="fas fa-sync-alt" />
-                                                </Button>
-                                                <Button
-                                                    style={{
-                                                        backgroundColor: 'rgba(255,255,255,0.2)',
-                                                        border: '1px solid rgba(255,255,255,0.4)',
-                                                        color: 'white'
-                                                    }}
-                                                    onClick={this.handleZoomIn}
-                                                    title="放大">
-                                                    <i className="fas fa-search-plus" />
-                                                </Button>
-                                            </ButtonGroup>
-                                        </div>
-                                    </CardHeader>
-                                    <div ref={this.graphContainerRef} style={{ height: '600px', width: '100%', position: 'relative' }}>
-                                        <ForceGraph2D
-                                            ref={this.fgRef}
-                                            graphData={this.state.graph_data}
-                                            width={this.state.containerWidth}
-                                            height={this.state.containerHeight}
-                                            nodeId="id"
-                                            nodeLabel="name"
-                                            nodeAutoColorBy="id"
-                                            nodeCanvasObject={(node, ctx, globalScale) => {
-                                                const label = node.name || node.id;
-                                                const isHovered = this.state.hoveredNode && this.state.hoveredNode.id === node.id;
-                                                const fontSize = isHovered ? 14 / globalScale : 12 / globalScale;
-                                                ctx.font = `${isHovered ? 'bold ' : ''}${fontSize}px Sans-Serif`;
-                                                const textWidth = ctx.measureText(label).width;
-                                                const bckgDimensions = [textWidth, fontSize].map(n => n + fontSize * 0.4);
-
-                                                // Draw node circle
-                                                ctx.fillStyle = node.color || '#0072E3';
-                                                ctx.beginPath();
-                                                const nodeSize = isHovered ? 7 : 5;
-                                                ctx.arc(node.x, node.y, nodeSize, 0, 2 * Math.PI, false);
-                                                ctx.fill();
-
-                                                // Draw label background
-                                                ctx.fillStyle = isHovered ? 'rgba(255, 255, 255, 0.95)' : 'rgba(255, 255, 255, 0.8)';
-                                                ctx.fillRect(
-                                                    node.x - bckgDimensions[0] / 2,
-                                                    node.y + 8,
-                                                    bckgDimensions[0],
-                                                    bckgDimensions[1]
-                                                );
-
-                                                // Draw label text
-                                                ctx.textAlign = 'center';
-                                                ctx.textBaseline = 'top';
-                                                ctx.fillStyle = isHovered ? '#000' : '#460046';
-                                                ctx.fillText(label, node.x, node.y + 8);
-                                            }}
-                                            nodePointerAreaPaint={(node, color, ctx) => {
-                                                ctx.fillStyle = color;
-                                                ctx.beginPath();
-                                                ctx.arc(node.x, node.y, 5, 0, 2 * Math.PI, false);
-                                                ctx.fill();
-                                            }}
-                                            linkDirectionalArrowLength={6}
-                                            linkDirectionalArrowRelPos={1}
-                                            linkColor={() => '#66B3FF'}
-                                            linkWidth={2}
-                                            onNodeClick={this.onClickNode}
-                                            onNodeHover={this.onNodeHover}
-                                            cooldownTicks={100}
-                                            onEngineStop={() => {
-                                                if (this.fgRef.current && this.state.graph_data.nodes.length > 1) {
-                                                    this.fgRef.current.zoomToFit(400, 50);
-                                                }
-                                            }}
-                                            d3AlphaDecay={0.02}
-                                            d3VelocityDecay={0.3}
-                                        />
-
-                                        {/* Tooltip for hovered node */}
-                                        {this.state.hoveredNode && this.state.comp_details[this.state.hoveredNode.id] && (
-                                            <div className="tooltip-modern scale-in" style={{
-                                                position: 'absolute',
-                                                top: '15px',
-                                                right: '15px',
-                                                background: 'linear-gradient(135deg, #ffffff 0%, #f8f9fe 100%)',
-                                                border: '2px solid #5e72e4',
-                                                borderRadius: '12px',
-                                                padding: '20px',
-                                                boxShadow: '0 10px 40px rgba(94, 114, 228, 0.25)',
-                                                maxWidth: '380px',
-                                                zIndex: 1000,
-                                                pointerEvents: 'none'
-                                            }}>
-                                                <div style={{
-                                                    background: 'linear-gradient(135deg, #5e72e4 0%, #825ee4 100%)',
-                                                    color: 'white',
-                                                    padding: '12px 15px',
-                                                    margin: '-20px -20px 15px -20px',
-                                                    borderRadius: '10px 10px 0 0',
-                                                    fontWeight: '700',
-                                                    fontSize: '1.1rem'
-                                                }}>
-                                                    <i className="fas fa-building mr-2" />
-                                                    {this.state.hoveredNode.id}
-                                                </div>
-                                                <div style={{ fontSize: '13px', lineHeight: '1.8' }}>
-                                                    <div style={{
-                                                        marginBottom: '12px',
-                                                        paddingBottom: '12px',
-                                                        borderBottom: '1px solid #e9ecef'
-                                                    }}>
-                                                        <div style={{
-                                                            color: '#8898aa',
-                                                            fontSize: '0.75rem',
-                                                            fontWeight: '700',
-                                                            textTransform: 'uppercase',
-                                                            letterSpacing: '0.5px',
-                                                            marginBottom: '4px'
-                                                        }}>
-                                                            Capital
-                                                        </div>
-                                                        <div style={{ color: '#32325d', fontWeight: '600' }}>
-                                                            {this.state.comp_details[this.state.hoveredNode.id].資本總額}
-                                                        </div>
-                                                    </div>
-                                                    <div style={{
-                                                        marginBottom: '12px',
-                                                        paddingBottom: '12px',
-                                                        borderBottom: '1px solid #e9ecef'
-                                                    }}>
-                                                        <div style={{
-                                                            color: '#8898aa',
-                                                            fontSize: '0.75rem',
-                                                            fontWeight: '700',
-                                                            textTransform: 'uppercase',
-                                                            letterSpacing: '0.5px',
-                                                            marginBottom: '4px'
-                                                        }}>
-                                                            Representative
-                                                        </div>
-                                                        <div style={{ color: '#32325d', fontWeight: '600' }}>
-                                                            {this.state.comp_details[this.state.hoveredNode.id].代表人姓名}
-                                                        </div>
-                                                    </div>
-                                                    <div>
-                                                        <div style={{
-                                                            color: '#8898aa',
-                                                            fontSize: '0.75rem',
-                                                            fontWeight: '700',
-                                                            textTransform: 'uppercase',
-                                                            letterSpacing: '0.5px',
-                                                            marginBottom: '4px'
-                                                        }}>
-                                                            Address
-                                                        </div>
-                                                        <div style={{ color: '#32325d', fontWeight: '600', lineHeight: '1.6' }}>
-                                                            {this.state.comp_details[this.state.hoveredNode.id].公司所在地}
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        )}
-                                    </div>
-                                    <div className="graph-controls p-4">
-                                        <div style={{
+                                        <CardHeader style={{
+                                            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                                            borderRadius: '12px 12px 0 0',
                                             display: 'flex',
-                                            alignItems: 'center',
                                             justifyContent: 'space-between',
-                                            marginBottom: '12px'
+                                            alignItems: 'center',
+                                            border: 'none'
                                         }}>
-                                            <div>
-                                                <h6 className="mb-0" style={{
-                                                    color: '#32325d',
-                                                    fontWeight: '700',
-                                                    fontSize: '0.95rem'
-                                                }}>
-                                                    <i className="fas fa-project-diagram mr-2" style={{ color: '#5e72e4' }} />
-                                                    Relationship Controls
-                                                </h6>
-                                                <p className="text-sm text-muted mb-0" style={{ fontSize: '0.8rem' }}>
-                                                    Explore company connections
-                                                </p>
+                                            <h3 className="mb-0" style={{ color: 'white', fontWeight: '700' }}>
+                                                <i className="fas fa-project-diagram mr-2" />
+                                                {this.state.comp}
+                                            </h3>
+                                            <div className="d-flex align-items-center">
+                                                <small style={{ color: 'rgba(255,255,255,0.9)', marginRight: '15px' }}>
+                                                    Click nodes to explore
+                                                </small>
+                                                <ButtonGroup size="sm">
+                                                    <Button
+                                                        style={{
+                                                            backgroundColor: 'rgba(255,255,255,0.2)',
+                                                            border: '1px solid rgba(255,255,255,0.4)',
+                                                            color: 'white'
+                                                        }}
+                                                        onClick={this.handleZoomOut}
+                                                        title="缩小">
+                                                        <i className="fas fa-search-minus" />
+                                                    </Button>
+                                                    <Button
+                                                        style={{
+                                                            backgroundColor: 'rgba(255,255,255,0.2)',
+                                                            border: '1px solid rgba(255,255,255,0.4)',
+                                                            color: 'white'
+                                                        }}
+                                                        onClick={this.handleZoomReset}
+                                                        title="重置">
+                                                        <i className="fas fa-sync-alt" />
+                                                    </Button>
+                                                    <Button
+                                                        style={{
+                                                            backgroundColor: 'rgba(255,255,255,0.2)',
+                                                            border: '1px solid rgba(255,255,255,0.4)',
+                                                            color: 'white'
+                                                        }}
+                                                        onClick={this.handleZoomIn}
+                                                        title="放大">
+                                                        <i className="fas fa-search-plus" />
+                                                    </Button>
+                                                </ButtonGroup>
                                             </div>
+                                        </CardHeader>
+                                        <div ref={this.graphContainerRef} style={{ height: '600px', width: '100%', position: 'relative' }}>
+                                            <ForceGraph2D
+                                                ref={this.fgRef}
+                                                graphData={this.state.graph_data}
+                                                width={this.state.containerWidth}
+                                                height={this.state.containerHeight}
+                                                nodeId="id"
+                                                nodeLabel="name"
+                                                nodeAutoColorBy="id"
+                                                nodeCanvasObject={(node, ctx, globalScale) => {
+                                                    const label = node.name || node.id;
+                                                    const isHovered = this.state.hoveredNode && this.state.hoveredNode.id === node.id;
+                                                    const fontSize = isHovered ? 14 / globalScale : 12 / globalScale;
+                                                    ctx.font = `${isHovered ? 'bold ' : ''}${fontSize}px Sans-Serif`;
+                                                    const textWidth = ctx.measureText(label).width;
+                                                    const bckgDimensions = [textWidth, fontSize].map(n => n + fontSize * 0.4);
+
+                                                    // Draw node circle
+                                                    ctx.fillStyle = node.color || '#0072E3';
+                                                    ctx.beginPath();
+                                                    const nodeSize = isHovered ? 7 : 5;
+                                                    ctx.arc(node.x, node.y, nodeSize, 0, 2 * Math.PI, false);
+                                                    ctx.fill();
+
+                                                    // Draw label background
+                                                    ctx.fillStyle = isHovered ? 'rgba(255, 255, 255, 0.95)' : 'rgba(255, 255, 255, 0.8)';
+                                                    ctx.fillRect(
+                                                        node.x - bckgDimensions[0] / 2,
+                                                        node.y + 8,
+                                                        bckgDimensions[0],
+                                                        bckgDimensions[1]
+                                                    );
+
+                                                    // Draw label text
+                                                    ctx.textAlign = 'center';
+                                                    ctx.textBaseline = 'top';
+                                                    ctx.fillStyle = isHovered ? '#000' : '#460046';
+                                                    ctx.fillText(label, node.x, node.y + 8);
+                                                }}
+                                                nodePointerAreaPaint={(node, color, ctx) => {
+                                                    ctx.fillStyle = color;
+                                                    ctx.beginPath();
+                                                    ctx.arc(node.x, node.y, 5, 0, 2 * Math.PI, false);
+                                                    ctx.fill();
+                                                }}
+                                                linkDirectionalArrowLength={6}
+                                                linkDirectionalArrowRelPos={1}
+                                                linkColor={() => '#66B3FF'}
+                                                linkWidth={2}
+                                                onNodeClick={this.onClickNode}
+                                                onNodeHover={this.onNodeHover}
+                                                cooldownTicks={100}
+                                                onEngineStop={() => {
+                                                    if (this.fgRef.current && this.state.graph_data.nodes.length > 1) {
+                                                        this.fgRef.current.zoomToFit(400, 50);
+                                                    }
+                                                }}
+                                                d3AlphaDecay={0.02}
+                                                d3VelocityDecay={0.3}
+                                            />
+
+                                            {/* Tooltip for hovered node */}
+                                            {this.state.hoveredNode && this.state.comp_details[this.state.hoveredNode.id] && (
+                                                <div className="tooltip-modern scale-in" style={{
+                                                    position: 'absolute',
+                                                    top: '15px',
+                                                    right: '15px',
+                                                    background: 'linear-gradient(135deg, #ffffff 0%, #f8f9fe 100%)',
+                                                    border: '2px solid #5e72e4',
+                                                    borderRadius: '12px',
+                                                    padding: '20px',
+                                                    boxShadow: '0 10px 40px rgba(94, 114, 228, 0.25)',
+                                                    maxWidth: '380px',
+                                                    zIndex: 1000,
+                                                    pointerEvents: 'none'
+                                                }}>
+                                                    <div style={{
+                                                        background: 'linear-gradient(135deg, #5e72e4 0%, #825ee4 100%)',
+                                                        color: 'white',
+                                                        padding: '12px 15px',
+                                                        margin: '-20px -20px 15px -20px',
+                                                        borderRadius: '10px 10px 0 0',
+                                                        fontWeight: '700',
+                                                        fontSize: '1.1rem'
+                                                    }}>
+                                                        <i className="fas fa-building mr-2" />
+                                                        {this.state.hoveredNode.id}
+                                                    </div>
+                                                    <div style={{ fontSize: '13px', lineHeight: '1.8' }}>
+                                                        <div style={{
+                                                            marginBottom: '12px',
+                                                            paddingBottom: '12px',
+                                                            borderBottom: '1px solid #e9ecef'
+                                                        }}>
+                                                            <div style={{
+                                                                color: '#8898aa',
+                                                                fontSize: '0.75rem',
+                                                                fontWeight: '700',
+                                                                textTransform: 'uppercase',
+                                                                letterSpacing: '0.5px',
+                                                                marginBottom: '4px'
+                                                            }}>
+                                                                Capital
+                                                            </div>
+                                                            <div style={{ color: '#32325d', fontWeight: '600' }}>
+                                                                {this.state.comp_details[this.state.hoveredNode.id].資本總額}
+                                                            </div>
+                                                        </div>
+                                                        <div style={{
+                                                            marginBottom: '12px',
+                                                            paddingBottom: '12px',
+                                                            borderBottom: '1px solid #e9ecef'
+                                                        }}>
+                                                            <div style={{
+                                                                color: '#8898aa',
+                                                                fontSize: '0.75rem',
+                                                                fontWeight: '700',
+                                                                textTransform: 'uppercase',
+                                                                letterSpacing: '0.5px',
+                                                                marginBottom: '4px'
+                                                            }}>
+                                                                Representative
+                                                            </div>
+                                                            <div style={{ color: '#32325d', fontWeight: '600' }}>
+                                                                {this.state.comp_details[this.state.hoveredNode.id].代表人姓名}
+                                                            </div>
+                                                        </div>
+                                                        <div>
+                                                            <div style={{
+                                                                color: '#8898aa',
+                                                                fontSize: '0.75rem',
+                                                                fontWeight: '700',
+                                                                textTransform: 'uppercase',
+                                                                letterSpacing: '0.5px',
+                                                                marginBottom: '4px'
+                                                            }}>
+                                                                Address
+                                                            </div>
+                                                            <div style={{ color: '#32325d', fontWeight: '600', lineHeight: '1.6' }}>
+                                                                {this.state.comp_details[this.state.hoveredNode.id].公司所在地}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
                                         </div>
-                                        <Row>
-                                            <Col md="6" className="mb-2">
-                                                <Button
-                                                    color="primary"
-                                                    block
-                                                    onClick={this.invest}
-                                                    style={{
-                                                        borderRadius: '8px',
-                                                        fontWeight: '600',
-                                                        fontSize: '0.875rem',
-                                                        padding: '10px'
+                                        <div className="graph-controls p-4">
+                                            <div style={{
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'space-between',
+                                                marginBottom: '12px'
+                                            }}>
+                                                <div>
+                                                    <h6 className="mb-0" style={{
+                                                        color: '#32325d',
+                                                        fontWeight: '700',
+                                                        fontSize: '0.95rem'
                                                     }}>
-                                                    <i className="fas fa-arrow-down mr-2" />
-                                                    注資方 (Investors)
-                                                </Button>
-                                            </Col>
-                                            <Col md="6" className="mb-2">
-                                                <Button
-                                                    color="success"
-                                                    block
-                                                    onClick={this.outvest}
-                                                    style={{
-                                                        borderRadius: '8px',
-                                                        fontWeight: '600',
-                                                        fontSize: '0.875rem',
-                                                        padding: '10px'
-                                                    }}>
-                                                    <i className="fas fa-arrow-up mr-2" />
-                                                    投資方 (Investments)
-                                                </Button>
-                                            </Col>
-                                            <Col md="6" className="mb-2">
-                                                <Button
-                                                    color="info"
-                                                    outline
-                                                    block
-                                                    onClick={this.investout}
-                                                    style={{
-                                                        borderRadius: '8px',
-                                                        fontWeight: '600',
-                                                        fontSize: '0.875rem',
-                                                        padding: '10px'
-                                                    }}>
-                                                    <i className="fas fa-share mr-2" />
-                                                    Investors' Investments
-                                                </Button>
-                                            </Col>
-                                            <Col md="6" className="mb-2">
-                                                <Button
-                                                    color="info"
-                                                    outline
-                                                    block
-                                                    onClick={this.investin}
-                                                    style={{
-                                                        borderRadius: '8px',
-                                                        fontWeight: '600',
-                                                        fontSize: '0.875rem',
-                                                        padding: '10px'
-                                                    }}>
-                                                    <i className="fas fa-exchange-alt mr-2" />
-                                                    Investors' Investors
-                                                </Button>
-                                            </Col>
-                                            <Col md="6" className="mb-2">
-                                                <Button
-                                                    color="warning"
-                                                    outline
-                                                    block
-                                                    onClick={this.outvestin}
-                                                    style={{
-                                                        borderRadius: '8px',
-                                                        fontWeight: '600',
-                                                        fontSize: '0.875rem',
-                                                        padding: '10px'
-                                                    }}>
-                                                    <i className="fas fa-users mr-2" />
-                                                    Investments' Investors
-                                                </Button>
-                                            </Col>
-                                            <Col md="6" className="mb-2">
-                                                <Button
-                                                    color="warning"
-                                                    outline
-                                                    block
-                                                    onClick={this.outvestout}
-                                                    style={{
-                                                        borderRadius: '8px',
-                                                        fontWeight: '600',
-                                                        fontSize: '0.875rem',
-                                                        padding: '10px'
-                                                    }}>
-                                                    <i className="fas fa-network-wired mr-2" />
-                                                    Investments' Investments
-                                                </Button>
-                                            </Col>
-                                        </Row>
-                                    </div>
-                                </Card >
-                            </Col >
-                        </Row >
-                    )
-                    }
+                                                        <i className="fas fa-project-diagram mr-2" style={{ color: '#5e72e4' }} />
+                                                        Relationship Controls
+                                                    </h6>
+                                                    <p className="text-sm text-muted mb-0" style={{ fontSize: '0.8rem' }}>
+                                                        Explore company connections
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <Row>
+                                                <Col md="6" className="mb-2">
+                                                    <Button
+                                                        color="primary"
+                                                        block
+                                                        onClick={this.invest}
+                                                        style={{
+                                                            borderRadius: '8px',
+                                                            fontWeight: '600',
+                                                            fontSize: '0.875rem',
+                                                            padding: '10px'
+                                                        }}>
+                                                        <i className="fas fa-arrow-down mr-2" />
+                                                        注資方 (Investors)
+                                                    </Button>
+                                                </Col>
+                                                <Col md="6" className="mb-2">
+                                                    <Button
+                                                        color="success"
+                                                        block
+                                                        onClick={this.outvest}
+                                                        style={{
+                                                            borderRadius: '8px',
+                                                            fontWeight: '600',
+                                                            fontSize: '0.875rem',
+                                                            padding: '10px'
+                                                        }}>
+                                                        <i className="fas fa-arrow-up mr-2" />
+                                                        投資方 (Investments)
+                                                    </Button>
+                                                </Col>
+                                                <Col md="6" className="mb-2">
+                                                    <Button
+                                                        color="info"
+                                                        outline
+                                                        block
+                                                        onClick={this.investout}
+                                                        style={{
+                                                            borderRadius: '8px',
+                                                            fontWeight: '600',
+                                                            fontSize: '0.875rem',
+                                                            padding: '10px'
+                                                        }}>
+                                                        <i className="fas fa-share mr-2" />
+                                                        Investors' Investments
+                                                    </Button>
+                                                </Col>
+                                                <Col md="6" className="mb-2">
+                                                    <Button
+                                                        color="info"
+                                                        outline
+                                                        block
+                                                        onClick={this.investin}
+                                                        style={{
+                                                            borderRadius: '8px',
+                                                            fontWeight: '600',
+                                                            fontSize: '0.875rem',
+                                                            padding: '10px'
+                                                        }}>
+                                                        <i className="fas fa-exchange-alt mr-2" />
+                                                        Investors' Investors
+                                                    </Button>
+                                                </Col>
+                                                <Col md="6" className="mb-2">
+                                                    <Button
+                                                        color="warning"
+                                                        outline
+                                                        block
+                                                        onClick={this.outvestin}
+                                                        style={{
+                                                            borderRadius: '8px',
+                                                            fontWeight: '600',
+                                                            fontSize: '0.875rem',
+                                                            padding: '10px'
+                                                        }}>
+                                                        <i className="fas fa-users mr-2" />
+                                                        Investments' Investors
+                                                    </Button>
+                                                </Col>
+                                                <Col md="6" className="mb-2">
+                                                    <Button
+                                                        color="warning"
+                                                        outline
+                                                        block
+                                                        onClick={this.outvestout}
+                                                        style={{
+                                                            borderRadius: '8px',
+                                                            fontWeight: '600',
+                                                            fontSize: '0.875rem',
+                                                            padding: '10px'
+                                                        }}>
+                                                        <i className="fas fa-network-wired mr-2" />
+                                                        Investments' Investments
+                                                    </Button>
+                                                </Col>
+                                            </Row>
+                                        </div>
+                                    </Card >
+                                </Col >
+                            </Row >
+                        </>
+                    )}
                 </Container >
             </>
         );

@@ -6,6 +6,7 @@
         opacity: 0;
         transform: translateY(10px);
     }
+
     to {
         opacity: 1;
         transform: translateY(0);
@@ -17,6 +18,7 @@
         transform: scale(0.95);
         opacity: 0;
     }
+
     to {
         transform: scale(1);
         opacity: 1;
@@ -28,6 +30,7 @@
         transform: translateX(20px);
         opacity: 0;
     }
+
     to {
         transform: translateX(0);
         opacity: 1;
@@ -165,8 +168,8 @@ html {
 }
 
 /* Improved focus states */
-input:focus, 
-textarea:focus, 
+input:focus,
+textarea:focus,
 select:focus {
     outline: none;
     border-color: #5e72e4 !important;
@@ -180,10 +183,13 @@ select:focus {
 
 /* Graph node highlight effect */
 @keyframes pulse {
-    0%, 100% {
+
+    0%,
+    100% {
         transform: scale(1);
         opacity: 1;
     }
+
     50% {
         transform: scale(1.05);
         opacity: 0.9;
@@ -192,4 +198,114 @@ select:focus {
 
 .node-highlight {
     animation: pulse 1.5s infinite;
+}
+
+/* Additional micro-animations */
+@keyframes bounce {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-5px);
+    }
+}
+
+@keyframes shake {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-5px);
+    }
+
+    75% {
+        transform: translateX(5px);
+    }
+}
+
+@keyframes pulseGlow {
+
+    0%,
+    100% {
+        box-shadow: 0 0 5px rgba(94, 114, 228, 0.5);
+    }
+
+    50% {
+        box-shadow: 0 0 20px rgba(94, 114, 228, 0.8);
+    }
+}
+
+.bounce-on-hover:hover {
+    animation: bounce 0.5s ease;
+}
+
+.shake-on-error {
+    animation: shake 0.3s ease;
+}
+
+.pulse-glow {
+    animation: pulseGlow 2s infinite;
+}
+
+/* Search input enhancements */
+.search-input-group input::placeholder {
+    color: #adb5bd;
+    font-style: italic;
+}
+
+.search-input-group {
+    position: relative;
+}
+
+/* Back button hover effect */
+.btn:hover i {
+    transform: translateX(-3px);
+    transition: transform 0.2s ease;
+}
+
+/* Number badge styling */
+.number-badge {
+    display: inline-block;
+    padding: 4px 12px;
+    background: linear-gradient(135deg, #5e72e4 0%, #825ee4 100%);
+    color: white;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-left: 8px;
+}
+
+/* Scroll to top button */
+.scroll-to-top {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #5e72e4 0%, #825ee4 100%);
+    color: white;
+    border: none;
+    box-shadow: 0 4px 15px rgba(94, 114, 228, 0.4);
+    cursor: pointer;
+    z-index: 1000;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.scroll-to-top:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 20px rgba(94, 114, 228, 0.6);
+}
+
+.scroll-to-top i {
+    font-size: 1.2rem;
 }

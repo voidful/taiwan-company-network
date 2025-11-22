@@ -121,15 +121,48 @@ class IndexClass extends React.Component {
                                                 <Input
                                                     placeholder="Search companies..."
                                                     type="text"
+                                                    value={this.state.searchText}
                                                     className="form-control"
                                                     onChange={(e) => {
                                                         this.setState({
-                                                            search: e.target.value.split(' ').filter(Boolean), // Filter out empty strings
-                                                            visibleCompanies: 20 // Reset visible count on search
+                                                            searchText: e.target.value,
+                                                            search: e.target.value.split(' ').filter(Boolean),
+                                                            visibleCompanies: 20
                                                         });
                                                     }}
                                                 />
+                                                {this.state.searchText && (
+                                                    <Button
+                                                        color="light"
+                                                        size="sm"
+                                                        style={{
+                                                            position: 'absolute',
+                                                            right: '5px',
+                                                            top: '50%',
+                                                            transform: 'translateY(-50%)',
+                                                            zIndex: 10,
+                                                            borderRadius: '50%',
+                                                            width: '30px',
+                                                            height: '30px',
+                                                            padding: 0
+                                                        }}
+                                                        onClick={() => {
+                                                            this.setState({
+                                                                searchText: '',
+                                                                search: [],
+                                                                visibleCompanies: 20
+                                                            });
+                                                        }}
+                                                    >
+                                                        <i className="fas fa-times" />
+                                                    </Button>
+                                                )}
                                             </InputGroup>
+                                            {this.state.search.length > 0 && (
+                                                <small className="text-muted mt-2 d-block">
+                                                    Found {filteredCompanies.length} {filteredCompanies.length === 1 ? 'company' : 'companies'}
+                                                </small>
+                                            )}
                                         </div>
                                     </CardHeader>
                                     <CardBody>
@@ -168,6 +201,35 @@ class IndexClass extends React.Component {
                                                 })
                                             }
                                         </Row>
+
+                                        {/* Empty State */}
+                                        {filteredCompanies.length === 0 && this.state.search.length > 0 && (
+                                            <div className="text-center py-5 fade-in">
+                                                <i className="fas fa-search" style={{
+                                                    fontSize: '4rem',
+                                                    color: '#d1d5db',
+                                                    marginBottom: '20px'
+                                                }} />
+                                                <h4 style={{ color: '#6b7280' }}>No companies found</h4>
+                                                <p className="text-muted">
+                                                    Try adjusting your search terms
+                                                </p>
+                                                <Button
+                                                    color="primary"
+                                                    outline
+                                                    onClick={() => {
+                                                        this.setState({
+                                                            searchText: '',
+                                                            search: [],
+                                                            visibleCompanies: 20
+                                                        });
+                                                    }}
+                                                >
+                                                    Clear Search
+                                                </Button>
+                                            </div>
+                                        )}
+
                                         {filteredCompanies.length > this.state.visibleCompanies && (
                                             <div className="text-center mt-4 fade-in">
                                                 <Button
