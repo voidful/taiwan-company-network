@@ -129,7 +129,7 @@ def save_json(data: Dict[str, Any], file_name: str) -> None:
     """Persist data to a UTF-8 encoded JSON file."""
 
     with open(file_name, "w", encoding="utf-8") as fp:
-        json.dump(data, fp, ensure_ascii=False)
+        json.dump(data, fp, ensure_ascii=False, separators=(',', ':'))
 
 
 if __name__ == "__main__":
