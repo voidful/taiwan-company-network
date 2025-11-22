@@ -1,26 +1,26 @@
 {
   "files": {
-    "main.css": "/taiwan-company-network/static/css/main.8edebfe6.css",
-    "main.js": "/taiwan-company-network/static/js/main.f6715754.js",
-    "static/media/fa-solid-900.ttf": "/taiwan-company-network/static/media/fa-solid-900.2582b0e4bcf85eceead0.ttf",
-    "static/media/fa-brands-400.ttf": "/taiwan-company-network/static/media/fa-brands-400.1815e00441357e01619e.ttf",
-    "static/media/fa-solid-900.woff2": "/taiwan-company-network/static/media/fa-solid-900.2463b90d9a316e4e5294.woff2",
-    "static/media/nucleo-icons.svg": "/taiwan-company-network/static/media/nucleo-icons.01ebecaf50461162d4bc.svg",
-    "static/media/fa-brands-400.woff2": "/taiwan-company-network/static/media/fa-brands-400.c210719e60948b211a12.woff2",
-    "static/media/fa-regular-400.ttf": "/taiwan-company-network/static/media/fa-regular-400.914997e1bdfc990d0897.ttf",
-    "static/media/fa-regular-400.woff2": "/taiwan-company-network/static/media/fa-regular-400.89999bdf5d835c012025.woff2",
-    "static/media/nucleo-icons.eot": "/taiwan-company-network/static/media/nucleo-icons.19abb5402a664606b14c.eot",
-    "static/media/nucleo-icons.ttf": "/taiwan-company-network/static/media/nucleo-icons.d6a66724e7a7bf1bba65.ttf",
-    "static/media/fa-v4compatibility.ttf": "/taiwan-company-network/static/media/fa-v4compatibility.da94ef451f4969af06e6.ttf",
-    "static/media/nucleo-icons.woff": "/taiwan-company-network/static/media/nucleo-icons.c82c9b7c40130b7116d3.woff",
-    "static/media/nucleo-icons.woff2": "/taiwan-company-network/static/media/nucleo-icons.cba267483aa6a7cb6e33.woff2",
-    "static/media/fa-v4compatibility.woff2": "/taiwan-company-network/static/media/fa-v4compatibility.ea8f94e1d22e0d35ccd4.woff2",
-    "index.html": "/taiwan-company-network/index.html",
-    "main.8edebfe6.css.map": "/taiwan-company-network/static/css/main.8edebfe6.css.map",
-    "main.f6715754.js.map": "/taiwan-company-network/static/js/main.f6715754.js.map"
+    "main.css": "/taiwan-company-network/index/static/css/main.c824efde.css",
+    "main.js": "/taiwan-company-network/index/static/js/main.caeeeb55.js",
+    "static/media/fa-solid-900.ttf": "/taiwan-company-network/index/static/media/fa-solid-900.2582b0e4bcf85eceead0.ttf",
+    "static/media/fa-brands-400.ttf": "/taiwan-company-network/index/static/media/fa-brands-400.1815e00441357e01619e.ttf",
+    "static/media/fa-solid-900.woff2": "/taiwan-company-network/index/static/media/fa-solid-900.2463b90d9a316e4e5294.woff2",
+    "static/media/nucleo-icons.svg": "/taiwan-company-network/index/static/media/nucleo-icons.01ebecaf50461162d4bc.svg",
+    "static/media/fa-brands-400.woff2": "/taiwan-company-network/index/static/media/fa-brands-400.c210719e60948b211a12.woff2",
+    "static/media/fa-regular-400.ttf": "/taiwan-company-network/index/static/media/fa-regular-400.914997e1bdfc990d0897.ttf",
+    "static/media/fa-regular-400.woff2": "/taiwan-company-network/index/static/media/fa-regular-400.89999bdf5d835c012025.woff2",
+    "static/media/nucleo-icons.eot": "/taiwan-company-network/index/static/media/nucleo-icons.19abb5402a664606b14c.eot",
+    "static/media/nucleo-icons.ttf": "/taiwan-company-network/index/static/media/nucleo-icons.d6a66724e7a7bf1bba65.ttf",
+    "static/media/fa-v4compatibility.ttf": "/taiwan-company-network/index/static/media/fa-v4compatibility.da94ef451f4969af06e6.ttf",
+    "static/media/nucleo-icons.woff": "/taiwan-company-network/index/static/media/nucleo-icons.c82c9b7c40130b7116d3.woff",
+    "static/media/nucleo-icons.woff2": "/taiwan-company-network/index/static/media/nucleo-icons.cba267483aa6a7cb6e33.woff2",
+    "static/media/fa-v4compatibility.woff2": "/taiwan-company-network/index/static/media/fa-v4compatibility.ea8f94e1d22e0d35ccd4.woff2",
+    "index.html": "/taiwan-company-network/index/index.html",
+    "main.c824efde.css.map": "/taiwan-company-network/index/static/css/main.c824efde.css.map",
+    "main.caeeeb55.js.map": "/taiwan-company-network/index/static/js/main.caeeeb55.js.map"
   },
   "entrypoints": [
-    "static/css/main.8edebfe6.css",
-    "static/js/main.f6715754.js"
+    "static/css/main.c824efde.css",
+    "static/js/main.caeeeb55.js"
   ]
 }
