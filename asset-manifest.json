@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "/taiwan-company-network/index/static/css/main.c824efde.css",
-    "main.js": "/taiwan-company-network/index/static/js/main.caeeeb55.js",
+    "main.js": "/taiwan-company-network/index/static/js/main.bc5528cb.js",
     "static/media/fa-solid-900.ttf": "/taiwan-company-network/index/static/media/fa-solid-900.2582b0e4bcf85eceead0.ttf",
     "static/media/fa-brands-400.ttf": "/taiwan-company-network/index/static/media/fa-brands-400.1815e00441357e01619e.ttf",
     "static/media/fa-solid-900.woff2": "/taiwan-company-network/index/static/media/fa-solid-900.2463b90d9a316e4e5294.woff2",
@@ -17,10 +17,10 @@
     "static/media/fa-v4compatibility.woff2": "/taiwan-company-network/index/static/media/fa-v4compatibility.ea8f94e1d22e0d35ccd4.woff2",
     "index.html": "/taiwan-company-network/index/index.html",
     "main.c824efde.css.map": "/taiwan-company-network/index/static/css/main.c824efde.css.map",
-    "main.caeeeb55.js.map": "/taiwan-company-network/index/static/js/main.caeeeb55.js.map"
+    "main.bc5528cb.js.map": "/taiwan-company-network/index/static/js/main.bc5528cb.js.map"
   },
   "entrypoints": [
     "static/css/main.c824efde.css",
-    "static/js/main.caeeeb55.js"
+    "static/js/main.bc5528cb.js"
   ]
 }
