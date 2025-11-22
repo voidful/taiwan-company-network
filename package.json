@@ -22,7 +22,7 @@
   "bugs": {
     "url": "https://github.com/creativetimofficial/argon-dashboard-react/issues"
   },
-  "homepage": "https://eric-lam.com/taiwan-company-network/index",
+  "homepage": "https://eric-lam.com/taiwan-company-network/",
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",

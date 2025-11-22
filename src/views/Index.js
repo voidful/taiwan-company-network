@@ -18,6 +18,7 @@
 import React from "react";
 
 import { useNavigate } from "react-router-dom";
+import { useCompany } from "context/CompanyContext";
 
 import {
     Card,
@@ -25,7 +26,7 @@ import {
     CardBody,
     Container,
     Row,
-    Col, InputGroupText, Input, InputGroup, Button
+    Col, InputGroupText, Input, InputGroup, Button, Spinner
 } from "reactstrap";
 // core components
 import Header from "components/Headers/Header.js";
@@ -39,7 +40,12 @@ class IndexClass extends React.Component {
     };
 
     componentDidMount() {
-        fetch('/data/graph.json')
+        // Clear company details when on company list page
+        if (this.props.setCompanyDetails) {
+            this.props.setCompanyDetails(null);
+        }
+
+        fetch('https://eric-lam.com/taiwan-company-network/data/graph.json')
             .then(res => res.json())
             .then(data => {
                 this.setState({
@@ -79,15 +85,33 @@ class IndexClass extends React.Component {
                 <Container className=" mt--7" fluid>
                     {/* Table */}
                     {isLoading ? (
-                        <div className="text-center mt-5">
-                            <h3>Loading company list...</h3>
+                        <div style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'center',
+                            alignItems: 'center',
+                            minHeight: '500px'
+                        }}>
+                            <Spinner color="primary" style={{ width: '4rem', height: '4rem' }} type="grow" children="" />
+                            <h3 style={{ marginTop: '30px' }} className="text-muted">Loading company list</h3>
                         </div>
                     ) : (
-                        <Row>
+                        <Row className="fade-in">
                             <div className=" col">
-                                <Card className=" shadow">
-                                    <CardHeader className=" bg-transparent">
-                                        <h3 className="mb-0">Company list</h3>
+                                <Card className="shadow-hover fade-in" style={{
+                                    borderRadius: '12px',
+                                    border: 'none',
+                                    boxShadow: '0 4px 15px rgba(0, 0, 0, 0.1)'
+                                }}>
+                                    <CardHeader style={{
+                                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                                        borderRadius: '12px 12px 0 0',
+                                        border: 'none'
+                                    }}>
+                                        <h3 className="mb-0" style={{ color: 'white', fontWeight: '700' }}>
+                                            <i className="fas fa-building mr-2" />
+                                            Company List
+                                        </h3>
                                         <br />
                                         <div className="search-container">
                                             <InputGroup className="search-input-group">
@@ -111,28 +135,54 @@ class IndexClass extends React.Component {
                                     <CardBody>
                                         <Row>
                                             {
-                                                filteredCompanies.slice(0, this.state.visibleCompanies).map((comp) => {
+                                                filteredCompanies.slice(0, this.state.visibleCompanies).map((comp, index) => {
                                                     return (
-                                                        <Col xl="3" md="6" key={comp}>
-                                                            <Card className="company-card" onClick={() => this.handleOnClick(comp)}>
-                                                                <CardBody>
-                                                                    <span className="company-name">{comp}</span>
-                                                                    <i className="fas fa-arrow-right company-arrow" />
-                                                                </CardBody>
-                                                            </Card>
+                                                        <Col xl="3" md="6" key={comp}
+                                                            className="fade-in"
+                                                            style={{ animationDelay: `${index * 0.05}s` }}>
+                                                            <div
+                                                                className="company-item"
+                                                                onClick={() => this.handleOnClick(comp)}>
+                                                                <div style={{
+                                                                    display: 'flex',
+                                                                    alignItems: 'center',
+                                                                    justifyContent: 'space-between'
+                                                                }}>
+                                                                    <span style={{
+                                                                        fontWeight: '600',
+                                                                        fontSize: '0.95rem',
+                                                                        color: '#32325d'
+                                                                    }}>
+                                                                        {comp}
+                                                                    </span>
+                                                                    <i className="fas fa-arrow-right"
+                                                                        style={{
+                                                                            color: '#5e72e4',
+                                                                            fontSize: '0.85rem',
+                                                                            transition: 'transform 0.2s ease'
+                                                                        }} />
+                                                                </div>
+                                                            </div>
                                                         </Col>
                                                     );
                                                 })
                                             }
                                         </Row>
                                         {filteredCompanies.length > this.state.visibleCompanies && (
-                                            <div className="load-more-container text-center mt-4">
+                                            <div className="text-center mt-4 fade-in">
                                                 <Button
-                                                    className="btn-load-more"
                                                     color="primary"
+                                                    size="lg"
+                                                    style={{
+                                                        borderRadius: '50px',
+                                                        padding: '12px 40px',
+                                                        fontWeight: '600',
+                                                        boxShadow: '0 4px 15px rgba(94, 114, 228, 0.3)'
+                                                    }}
                                                     onClick={() => this.setState(prevState => ({ visibleCompanies: prevState.visibleCompanies + 20 }))}
                                                 >
-                                                    Load More
+                                                    <i className="fas fa-chevron-down mr-2" />
+                                                    Load More Companies
                                                 </Button>
                                             </div>
                                         )}
@@ -150,7 +200,8 @@ class IndexClass extends React.Component {
 // Wrapper component to use hooks with class component
 function Index(props) {
     const navigate = useNavigate();
-    return <IndexClass {...props} navigate={navigate} />;
+    const { setCompanyDetails } = useCompany();
+    return <IndexClass {...props} navigate={navigate} setCompanyDetails={setCompanyDetails} />;
 }
 
 export default Index;

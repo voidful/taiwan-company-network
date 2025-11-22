@@ -1,86 +1,195 @@
-/* Custom UI enhancements for Taiwan Company Network */
+/* Custom UI/UX Enhancements */
 
-/* Search bar container */
-.search-container {
-    margin-bottom: 1rem;
-    display: flex;
-    justify-content: flex-start;
+/* Smooth animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-/* Search input group styling */
-.search-input-group {
-    width: 100%;
-    max-width: 400px;
-    border-radius: 0.5rem;
-    overflow: hidden;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+@keyframes scaleIn {
+    from {
+        transform: scale(0.95);
+        opacity: 0;
+    }
+    to {
+        transform: scale(1);
+        opacity: 1;
+    }
 }
 
-.search-input-group .input-group-text {
-    background-color: #f8f9fa;
-    border: none;
+@keyframes slideInRight {
+    from {
+        transform: translateX(20px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
 }
 
-.search-input-group .form-control {
-    border: none;
-    background-color: #fff;
+/* Utility classes */
+.fade-in {
+    animation: fadeIn 0.4s ease-out;
 }
 
-/* Company card styling */
-.company-card {
+.scale-in {
+    animation: scaleIn 0.3s ease-out;
+}
+
+.slide-in-right {
+    animation: slideInRight 0.4s ease-out;
+}
+
+/* Smooth transitions */
+* {
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+/* Enhanced card hover effects */
+.card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease !important;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* Company list item enhancements */
+.company-item {
     cursor: pointer;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    border: none;
-    border-radius: 0.75rem;
-    background: linear-gradient(135deg, #e0f7ff 0%, #fff 100%);
-    padding: 1rem;
-    text-align: center;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    padding: 15px 20px;
+    margin: 8px 0;
+    border-radius: 8px;
+    background: white;
+    border: 1px solid #e9ecef;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
 }
 
-.company-card:hover {
-    transform: translateY(-4px);
+.company-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 4px;
+    background: linear-gradient(135deg, #5e72e4 0%, #825ee4 100%);
+    transform: scaleY(0);
+    transition: transform 0.3s ease;
+}
+
+.company-item:hover {
+    transform: translateX(4px);
+    box-shadow: 0 6px 20px rgba(94, 114, 228, 0.15);
+    border-color: #5e72e4;
+}
+
+.company-item:hover::before {
+    transform: scaleY(1);
+}
+
+/* Search bar enhancements */
+.search-input-group input {
+    transition: all 0.3s ease;
+    border: 2px solid #e9ecef;
+}
+
+.search-input-group input:focus {
+    border-color: #5e72e4;
+    box-shadow: 0 0 0 4px rgba(94, 114, 228, 0.1);
+    transform: translateY(-1px);
+}
+
+/* Button enhancements */
+.btn {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn:hover {
+    transform: translateY(-1px);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
-.company-name {
-    display: block;
-    font-weight: 600;
-    font-size: 1rem;
-    color: #212529;
-    margin-bottom: 0.5rem;
+.btn:active {
+    transform: translateY(0);
 }
 
-.company-arrow {
-    font-size: 0.9rem;
-    color: #5e72e4;
+/* Graph controls styling */
+.graph-controls {
+    background: linear-gradient(135deg, #f8f9fe 0%, #ffffff 100%);
+    border-radius: 10px;
+    padding: 15px;
+    margin-bottom: 15px;
 }
 
-/* Load more button container */
-.load-more-container {
-    margin-top: 1.5rem;
+/* Enhanced tooltip */
+.tooltip-modern {
+    backdrop-filter: blur(10px);
+    background: rgba(255, 255, 255, 0.95) !important;
+    border: 2px solid #5e72e4;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    animation: scaleIn 0.2s ease-out;
 }
 
-.btn-load-more {
-    min-width: 150px;
-    font-weight: 600;
-    border-radius: 0.5rem;
-    transition: background-color 0.2s ease;
+/* Loading spinner container */
+.loading-container {
+    animation: fadeIn 0.3s ease-out;
 }
 
-.btn-load-more:hover {
-    background-color: #5e72e4;
-    color: #fff;
+/* Smooth scroll */
+html {
+    scroll-behavior: smooth;
 }
 
-/* Adjust card header spacing */
-.card-header {
-    padding-bottom: 0.5rem;
+/* Enhanced shadows */
+.shadow-hover:hover {
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2) !important;
 }
 
-/* Ensure responsive layout */
-@media (max-width: 768px) {
-    .company-card {
-        margin-bottom: 1rem;
+/* Card header gradient */
+.card-header-gradient {
+    background: linear-gradient(135deg, #5e72e4 0%, #825ee4 100%);
+    color: white;
+}
+
+/* Improved focus states */
+input:focus, 
+textarea:focus, 
+select:focus {
+    outline: none;
+    border-color: #5e72e4 !important;
+    box-shadow: 0 0 0 4px rgba(94, 114, 228, 0.1) !important;
+}
+
+/* Better spacing utilities */
+.spacing-modern {
+    padding: 1.5rem;
+}
+
+/* Graph node highlight effect */
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
     }
+    50% {
+        transform: scale(1.05);
+        opacity: 0.9;
+    }
+}
+
+.node-highlight {
+    animation: pulse 1.5s infinite;
 }

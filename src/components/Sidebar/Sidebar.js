@@ -20,6 +20,8 @@ import React from "react";
 import { NavLink as NavLinkRRD, Link, useLocation } from "react-router-dom";
 // nodejs library to set properties for components
 import { PropTypes } from "prop-types";
+import { useCompany } from "context/CompanyContext";
+import { Card, CardBody, CardTitle, CardText, CardHeader } from "reactstrap";
 
 // reactstrap components
 import {
@@ -76,7 +78,7 @@ class SidebarClass extends React.Component {
                             to={prop.path}
                             tag={NavLinkRRD}
                             onClick={this.closeCollapse}
-                            className={({ isActive }) => isActive ? "active" : ""}
+                            className={this.props.location.pathname.includes(prop.path) ? "active" : ""}
                         >
                             <i className={prop.icon} />
                             {prop.name}
@@ -161,6 +163,25 @@ class SidebarClass extends React.Component {
                         </Form>
                         {/* Navigation */}
                         <Nav navbar>{this.createLinks(routes)}</Nav>
+
+                        {/* Company Details Section */}
+                        {this.props.companyDetails && (
+                            <>
+                                <hr className="my-3" />
+                                <h6 className="navbar-heading text-muted">Company Details</h6>
+                                <Card className="shadow border-0 bg-secondary">
+                                    <CardBody>
+                                        <CardTitle tag="h5" className="text-uppercase text-muted mb-0">{this.props.companyDetails.id}</CardTitle>
+                                        <span className="h2 font-weight-bold mb-0"></span>
+                                        <div className="mt-3 mb-0 text-muted text-sm">
+                                            <p><strong>Capital:</strong><br /> {this.props.companyDetails.資本總額}</p>
+                                            <p><strong>Representative:</strong><br /> {this.props.companyDetails.代表人姓名}</p>
+                                            <p><strong>Address:</strong><br /> {this.props.companyDetails.公司所在地}</p>
+                                        </div>
+                                    </CardBody>
+                                </Card>
+                            </>
+                        )}
                     </Collapse>
                 </Container>
             </Navbar>
@@ -168,31 +189,11 @@ class SidebarClass extends React.Component {
     }
 }
 
-Sidebar.defaultProps = {
-    routes: [{}]
-};
-
-Sidebar.propTypes = {
-    // links that will be displayed inside the component
-    routes: PropTypes.arrayOf(PropTypes.object),
-    logo: PropTypes.shape({
-        // innerLink is for links that will direct the user within the app
-        // it will be rendered as <Link to="...">...</Link> tag
-        innerLink: PropTypes.string,
-        // outterLink is for links that will direct the user outside the app
-        // it will be rendered as simple <a href="...">...</a> tag
-        outterLink: PropTypes.string,
-        // the image src of the logo
-        imgSrc: PropTypes.string.isRequired,
-        // the alt for the img
-        imgAlt: PropTypes.string.isRequired
-    })
-};
-
 // Wrapper to use hooks
-function Sidebar(props) {
+function Sidebar({ routes = [{}], ...props }) {
     const location = useLocation();
-    return <SidebarClass {...props} location={location} />;
+    const { companyDetails } = useCompany();
+    return <SidebarClass {...props} routes={routes} location={location} companyDetails={companyDetails} />;
 }
 
 export default Sidebar;

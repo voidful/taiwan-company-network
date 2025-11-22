@@ -25,11 +25,15 @@ import "assets/scss/argon-dashboard-react.scss";
 import "assets/css/custom.css";
 import AdminLayout from "layouts/Admin.js";
 
+import { CompanyProvider } from "context/CompanyContext";
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-    <BrowserRouter basename={process.env.PUBLIC_URL}>
-        <Routes>
-            <Route path="/*" element={<AdminLayout />} />
-        </Routes>
-    </BrowserRouter>
+    <CompanyProvider>
+        <BrowserRouter basename={process.env.PUBLIC_URL}>
+            <Routes>
+                <Route path="/*" element={<AdminLayout />} />
+            </Routes>
+        </BrowserRouter>
+    </CompanyProvider>
 );
